@@ -5,9 +5,9 @@ import javax.sql.DataSource
 
 class PhotocentreDao(private val dataSource: DataSource) {
 
-    fun createPhotocentre(name: String): Long {
+    fun createPhotocentre(photocentre: Photocentre): Long {
         val statement = dataSource.connection.prepareStatement("INSERT INTO Photocentre (photocentre_name) VALUES(?)", Statement.RETURN_GENERATED_KEYS)
-        statement.setString(1, name)
+        statement.setString(1, photocentre.name)
         statement.executeUpdate()
         val generated = statement.generatedKeys
         generated.next()
