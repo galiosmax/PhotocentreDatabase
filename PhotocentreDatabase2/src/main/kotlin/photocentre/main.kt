@@ -7,7 +7,7 @@ class Main {
         fun main(args: Array<String>) {
             val db = Db()
             val photocentreDataSource = PhotocentreDataSource(db.dataSource)
-            //val photocentreDao = PhotocentreDao(photocentreDataSource)
+            val amateurDao = AmateurDao(photocentreDataSource)
             val branchOfficeDao = BranchOfficeDao(photocentreDataSource)
             val kioskDao = KioskDao(photocentreDataSource)
             val orderDao = OrderDao(photocentreDataSource)
@@ -18,8 +18,7 @@ class Main {
             val supplyDao = SupplyDao(photocentreDataSource)
             val workerDao = WorkerDao(photocentreDataSource)
             val professionalDao = ProfessionalDao(photocentreDataSource)
-            val amateurDao = AmateurDao(photocentreDataSource)
-            val controller = Controller(Executor(photocentreDataSource, /*photocentreDao, */branchOfficeDao, kioskDao, orderDao,
+            val controller = Controller(Executor(photocentreDataSource, amateurDao, branchOfficeDao, CustomerDao, kioskDao, orderDao,
                     photoDao, serviceDao, itemDao, supplierDao, supplyDao, workerDao, professionalDao, amateurDao))
             generateSequence { print("> "); readLine() }
                     .takeWhile { it != "exit" }
