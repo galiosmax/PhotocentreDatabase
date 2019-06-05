@@ -18,11 +18,11 @@ class Main {
                     .configure()
                     .dataSource(
                             "jdbc:postgresql://localhost:5432/postgres", "postgres",
-                            "123"
+                            "111"
                     )
                     .load()
 
-            flyway.migrate();
+            flyway.migrate()
         }
     }
 }
