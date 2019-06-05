@@ -11,37 +11,18 @@ class Main {
             val connection = DriverManager.getConnection(
                     "jdbc:postgresql://localhost:5432/postgres",
                     "postgres",
-                    "111"
+                    "123"
             )
 
             val flyway = Flyway
                     .configure()
                     .dataSource(
                             "jdbc:postgresql://localhost:5432/postgres", "postgres",
-                            "111"
+                            "123"
                     )
                     .load()
 
-            //flyway.clean();
-//            flyway.repair()
-            // Start the migration
-            flyway.migrate()
-
-//            connection.use { conn ->
-//                println(selectPage(conn, Page(10, 3)))
-//
-//                var from: Pair<String, Int>? = null
-//                for (i in 0..10){
-//                    val res = selectPage2(conn, Page2(from, 6))
-//                    if (res.isEmpty()) {
-//                        break
-//                    }
-//                    print("Page $i: ")
-//                    println(res)
-//                    from = res.last()
-//                }
-//            }
-
+            flyway.migrate();
         }
     }
 }
