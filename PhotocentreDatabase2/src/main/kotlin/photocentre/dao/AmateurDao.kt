@@ -6,12 +6,12 @@ import javax.sql.DataSource
 
 class AmateurDao(private val dataSource: DataSource) {
 
-    fun createAmateur(toCreate: Amateur): Long {
+    fun createAmateur(amateur: Amateur): Long {
         val statement = dataSource.connection.prepareStatement(
                 "insert into amateurs (amateur_experience) values (?)",
                 Statement.RETURN_GENERATED_KEYS
         )
-        statement.setInt(1, toCreate.experience)
+        statement.setInt(1, amateur.experience)
         statement.executeUpdate()
         val generated = statement.generatedKeys
         generated.next()

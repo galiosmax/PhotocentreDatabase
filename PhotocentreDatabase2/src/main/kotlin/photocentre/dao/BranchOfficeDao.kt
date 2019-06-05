@@ -7,13 +7,13 @@ import javax.sql.DataSource
 
 class BranchOfficeDao(private val dataSource: DataSource) {
 
-    fun createBranchOffice(toCreate: BranchOffice): Long {
+    fun createBranchOffice(branchOffice: BranchOffice): Long {
         val statement = dataSource.connection.prepareStatement(
                 "insert into branch_offices (branch_office_address, branch_office_amount_of_workers) values (?, ?)",
                 Statement.RETURN_GENERATED_KEYS
         )
-        statement.setString(1, toCreate.address)
-        statement.setInt(2, toCreate.amountOfWorkers!!)
+        statement.setString(1, branchOffice.address)
+        statement.setInt(2, branchOffice.amountOfWorkers!!)
         statement.executeUpdate()
         val generated = statement.generatedKeys
         generated.next()

@@ -1,18 +1,28 @@
 package photocentre.dao
 
+import photocentre.dataClasses.BranchOffice
 import photocentre.dataClasses.Film
+import photocentre.dataClasses.Kiosk
+import photocentre.dataClasses.SoldItem
+import java.sql.Date
 import java.sql.Statement
+import java.sql.Types
 import javax.sql.DataSource
 
 class FilmDao(private val dataSource: DataSource) {
 
-    fun createFilm(toCreate: Film): Long {
+    fun createFilm(film: Film): Long {
         val statement = dataSource.connection.prepareStatement(
                 "insert into films (film_name, sold_item_id, order_id) values(?, ?, ?)",
-                Statement.RETURN_GENERATED_KEYS)
-        statement.setString(1, toCreate.name)
-        statement.setLong(2, toCreate.soldItem?.id!!)
-        statement.setLong(3, toCreate.order.id!!)
+                Statement.RETURN_GENERATED_KEYS
+        )
+        statement.setString(1, film.name)
+        if (film.soldItem != null) {
+            statement.setLong(2, film.soldItem.id!!)
+        } else {
+            statement.setNull(2, Types.BIGINT)
+        }
+        statement.setLong(3, film.order.id!!)
         statement.executeUpdate()
         val generated = statement.generatedKeys
         generated.next()
@@ -22,11 +32,16 @@ class FilmDao(private val dataSource: DataSource) {
     fun createFilms(toCreate: Iterable<Film>): List<Long> {
         val statement = dataSource.connection.prepareStatement(
                 "insert into films (film_name, sold_item_id, order_id) values(?, ?, ?)",
-                Statement.RETURN_GENERATED_KEYS)
+                Statement.RETURN_GENERATED_KEYS
+        )
 
         for (film in toCreate) {
             statement.setString(1, film.name)
-            statement.setLong(2, film.soldItem?.id!!)
+            if (film.soldItem != null) {
+                statement.setLong(2, film.soldItem.id!!)
+            } else {
+                statement.setNull(2, Types.BIGINT)
+            }
             statement.setLong(3, film.order.id!!)
             statement.addBatch()
         }
@@ -34,34 +49,43 @@ class FilmDao(private val dataSource: DataSource) {
         statement.executeUpdate()
         val generated = statement.generatedKeys
         val res = ArrayList<Long>()
-        while(generated.next()) {
+        while (generated.next()) {
             res += generated.getLong(1)
         }
         return res
     }
 
-    //TODO REWRITE LAZY LOADING
-    /* fun findFilm(id: Long): Film? {
-         val statement = dataSource.connection.prepareStatement("SELECT film_id, film_name, professional_id, amateur_id FROM films WHERE film_id = ?")
-         statement.setLong(1, id)
-         val resultSet = statement.executeQuery()
-         return if (resultSet.next()) {
-             //if (resultSet.getLong("professional_id") != null) {
-             //}
-             Film(resultSet.getLong("film_id"),
-                     resultSet.getString("film_name"),
-                     Professional(resultSet.getLong("professional_id"), ),
-                     null)
-         } else {
-             null
-         }
-     }*/
+    fun findFilm(id: Long): Film? {
+        val statement = dataSource.connection.prepareStatement(
+                "SELECT film_id, film_name, sold_item_id, order_id FROM films WHERE film_id = ?"
+        )
+        statement.setLong(1, id)
+        val resultSet = statement.executeQuery()
+        val soldItemDao = SoldItemDao(dataSource)
+        val orderDao = OrderDao(dataSource)
+
+        return if (resultSet.next()) {
+            Film(
+                    id = resultSet.getLong("film_id"),
+                    name = resultSet.getString("film_name"),
+                    soldItem = soldItemDao.findSoldItem(resultSet.getLong("sold_item_id")),
+                    order = orderDao.findOrder(resultSet.getLong("order_id"))
+            )
+        } else {
+            null
+        }
+    }
 
     fun updateFilm(film: Film) {
         val statement = dataSource.connection.prepareStatement(
-                "update films set film_name = ?, sold_item_id = ?, order_id = ? where film_id = ?")
+                "update films set film_name = ?, sold_item_id = ?, order_id = ? where film_id = ?"
+        )
         statement.setString(1, film.name)
-        statement.setLong(2, film.soldItem?.id!!)
+        if (film.soldItem != null) {
+            statement.setLong(2, film.soldItem.id!!)
+        } else {
+            statement.setNull(2, Types.BIGINT)
+        }
         statement.setLong(3, film.order.id!!)
         statement.setLong(4, film.id!!)
 
@@ -73,5 +97,60 @@ class FilmDao(private val dataSource: DataSource) {
                 "delete from films where film_id = ?")
         statement.setLong(1, id)
         statement.executeUpdate()
+    }
+
+    fun getAmountByOffice(branchOffice: BranchOffice, dateBegin: Date, dateEnd: Date): Int {
+        val statement = dataSource.connection.prepareStatement(
+                "select count(film_id) as film_amount " +
+                        "from orders " +
+                        "left join films " +
+                        "on films.order_id = orders.order_id " +
+                        "where branch_office_id = ? " +
+                        "and orders.order_date between ? and ? " +
+                        "and orders.order_type in ('Film processing', 'Both')"
+        )
+        statement.setLong(1, branchOffice.id!!)
+        statement.setDate(2, dateBegin)
+        statement.setDate(3, dateEnd)
+
+        val resultSet = statement.executeQuery()
+
+        return resultSet.getInt("film_amount")
+    }
+
+    fun getAmountByKiosk(kiosk: Kiosk, dateBegin: Date, dateEnd: Date): Int {
+        val statement = dataSource.connection.prepareStatement(
+                "select count(film_id) as film_amount " +
+                        "from orders " +
+                        "left join films " +
+                        "on films.order_id = orders.order_id " +
+                        "where kiosk_id = ? " +
+                        "and orders.order_date between ? and ? " +
+                        "and orders.order_type in ('Film processing', 'Both')"
+        )
+        statement.setLong(1, kiosk.id!!)
+        statement.setDate(2, dateBegin)
+        statement.setDate(3, dateEnd)
+
+        val resultSet = statement.executeQuery()
+
+        return resultSet.getInt("film_amount")
+    }
+
+    fun getAmountByDate(dateBegin: Date, dateEnd: Date): Int {
+        val statement = dataSource.connection.prepareStatement(
+                "select count(film_id) as film_amount " +
+                        "from orders " +
+                        "left join films " +
+                        "on films.order_id = orders.order_id " +
+                        "and orders.order_date between ? and ? " +
+                        "and orders.order_type in ('Film processing', 'Both')"
+        )
+        statement.setDate(1, dateBegin)
+        statement.setDate(2, dateEnd)
+
+        val resultSet = statement.executeQuery()
+
+        return resultSet.getInt("film_amount")
     }
 }

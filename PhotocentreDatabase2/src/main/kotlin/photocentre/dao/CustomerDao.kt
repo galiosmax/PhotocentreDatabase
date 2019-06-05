@@ -55,6 +55,7 @@ class CustomerDao(private val dataSource: DataSource) {
             } else {
                 statement.setNull(4, BIGINT)
             }
+            statement.addBatch()
         }
 
         statement.executeUpdate()

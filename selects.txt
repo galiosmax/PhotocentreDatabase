@@ -201,6 +201,7 @@ where Orders.order_date between (SELECT MIN(order_date) FROM orders) and to_date
 --фотоцентру в целом за некоторый период времени.
 
 --По филиалу
+--getAmountByOffice() from FilmDao
 select count(film_id)
 from orders
 left join films
@@ -211,6 +212,7 @@ and orders.order_type in ('Film processing', 'Both');
 
 
 --По киоску
+--getAmountByKiosk()
 select count(film_id)
 from orders
 left join films
@@ -221,6 +223,7 @@ and orders.order_type in ('Film processing', 'Both');
 
 
 --В целом за период времени
+--getAmountByDate()
 select count(film_id)
 from orders
 left join films
