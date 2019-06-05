@@ -4,7 +4,7 @@
 --фотоцентру.
 
 --По филиалам
---findBranchOffice(..) from BranchOfficeDao
+--selectBranchOffices()(..) from BranchOfficeDao
 select branch_office_id, branch_office_address
 from branch_offices;
 
@@ -27,6 +27,7 @@ from kiosks;
 
 
 --Если надо в целом, то можно офисы с их киосками
+--selectBranchOfficesAndKiosks()
 select branch_offices.branch_office_id as office_id,
 branch_offices.branch_office_address as office_address,
 kiosks.kiosk_id as kiosk_id,

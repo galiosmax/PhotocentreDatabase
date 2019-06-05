@@ -1,6 +1,7 @@
 package photocentre.dao
 
 import photocentre.dataClasses.BranchOffice
+import photocentre.dataClasses.Kiosk
 import java.sql.Statement
 import javax.sql.DataSource
 
@@ -34,7 +35,7 @@ class BranchOfficeDao(private val dataSource: DataSource) {
         statement.executeUpdate()
         val generated = statement.generatedKeys
         val res = ArrayList<Long>()
-        while(generated.next()) {
+        while (generated.next()) {
             res += generated.getLong(1)
         }
 
@@ -74,9 +75,61 @@ class BranchOfficeDao(private val dataSource: DataSource) {
 
     fun countBranchOffices(): Int {
         val statement = dataSource.connection.prepareStatement(
-                "select count(*) as Total_Offices from branch_offices;"
+                "select count(*) as Total_Offices from branch_offices"
         )
         val resultSet = statement.executeQuery()
         return resultSet.getInt("Total_Offices")
+    }
+
+    fun selectBranchOffices(): List<BranchOffice> {
+        val statement = dataSource.connection.prepareStatement(
+                "select branch_office_id, branch_office_address from branch_offices"
+        )
+        val resultSet = statement.executeQuery()
+        val res = ArrayList<BranchOffice>()
+
+        while (resultSet.next()) {
+            res += BranchOffice(
+                    resultSet.getLong("branch_office_id"),
+                    resultSet.getString("branch_office_address"),
+                    0
+            )
+        }
+        return res
+    }
+
+    fun selectBranchOfficesAndKiosks(): List<Pair<BranchOffice, Kiosk>> {
+        val statement = dataSource.connection.prepareStatement(
+                "select branch_offices.branch_office_id as office_id,\n" +
+                        "branch_offices.branch_office_address as office_address,\n" +
+                        "kiosks.kiosk_id as kiosk_id,\n" +
+                        "kiosks.kiosk_address as kiosk_address \n" +
+                        "from branch_offices \n" +
+                        "left join kiosks \n" +
+                        "on branch_offices.branch_office_id = kiosks.branch_office_id\n" +
+                        "order by office_id, kiosk_id;"
+        )
+        val resultSet = statement.executeQuery()
+        val res = ArrayList<Pair<BranchOffice, Kiosk>>()
+
+        while (resultSet.next()) {
+
+            val office = BranchOffice(
+                    resultSet.getLong("office_id"),
+                    resultSet.getString("office_address"),
+                    0
+            )
+
+            res += Pair(
+                    office,
+                    Kiosk(
+                            resultSet.getLong("kiosk_id"),
+                            resultSet.getString("kiosk_address"),
+                            0,
+                            office
+                    )
+            )
+        }
+        return res
     }
 }
