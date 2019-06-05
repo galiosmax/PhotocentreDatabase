@@ -10,7 +10,7 @@ from branch_offices;
 
 
 --По киоскам
---findKiosk(..) from KioskDao
+--selectKiosks(..) from KioskDao
 select kiosk_id, kiosk_address
 from kiosks;
 
@@ -21,13 +21,14 @@ select count(*) as Total_Offices
 from branch_offices;
 
 
---Общее количество по киоскам
+--Общее количество по киоскам\
+--countKiosks() from KioskDao
 select count(*) as Total_Kiosks
 from kiosks;
 
 
 --Если надо в целом, то можно офисы с их киосками
---selectBranchOfficesAndKiosks()
+--selectBranchOfficesAndKiosks() from BranchOfficeDao
 select branch_offices.branch_office_id as office_id,
 branch_offices.branch_office_address as office_address,
 kiosks.kiosk_id as kiosk_id,
@@ -212,7 +213,7 @@ and orders.order_type in ('Film processing', 'Both');
 
 
 --По киоску
---getAmountByKiosk()
+--getAmountByKiosk() from FilmDao
 select count(film_id)
 from orders
 left join films
@@ -223,7 +224,7 @@ and orders.order_type in ('Film processing', 'Both');
 
 
 --В целом за период времени
---getAmountByDate()
+--getAmountByDate() from FilmDao
 select count(film_id)
 from orders
 left join films
@@ -303,7 +304,8 @@ where professional_id is not null;
 
 
 --По скидкам
---getIfDiscount()
+--СДЕЛАТЬ ЧЕРЕЗ СЕЛФ ДЖОЙН
+--getIfDiscount() from CustomerDao
 select c.customer_name, (
 	case 
 		when (c.professional_id is not null) 
