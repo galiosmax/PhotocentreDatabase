@@ -7,7 +7,7 @@ import javax.sql.DataSource
 
 class ProfessionalDao(private val dataSource: DataSource) {
 
-    fun createProfessional(toCreate: Professional): Long {
+    /*fun createProfessional(toCreate: Professional): Long {
         val statement = dataSource.connection.prepareStatement(
             "INSERT INTO professionals (professional_discount, branch_office_id) VALUES(?, ?)",
             Statement.RETURN_GENERATED_KEYS
@@ -72,5 +72,5 @@ class ProfessionalDao(private val dataSource: DataSource) {
         val statement = dataSource.connection.prepareStatement("DELETE FROM professionals WHERE professional_id = ?")
         statement.setLong(1, id)
         statement.executeUpdate()
-    }
+    }*/
 }

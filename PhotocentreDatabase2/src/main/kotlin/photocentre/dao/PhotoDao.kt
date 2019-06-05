@@ -6,7 +6,7 @@ import javax.sql.DataSource
 
 class PhotoDao(private val dataSource: DataSource) {
 
-    fun createPhoto(toCreate: Photo): Long {
+   /* fun createPhoto(toCreate: Photo): Long {
         val statement = dataSource.connection.prepareStatement("INSERT INTO photos (photo_paper_type, photo_film, photo_format, order_id) VALUES(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)
         statement.setString(1, toCreate.paperType)
         statement.setString(2, toCreate.film)
@@ -69,5 +69,5 @@ class PhotoDao(private val dataSource: DataSource) {
         val statement = dataSource.connection.prepareStatement("DELETE FROM photos WHERE photo_id = ?")
         statement.setLong(1, id)
         statement.executeUpdate()
-    }
+    }*/
 }

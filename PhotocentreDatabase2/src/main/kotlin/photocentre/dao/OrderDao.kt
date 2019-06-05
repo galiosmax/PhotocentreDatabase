@@ -6,7 +6,7 @@ import javax.sql.DataSource
 
 class OrderDao(private val dataSource: DataSource) {
 
-    fun createOrder(toCreate: Order): Long {
+    /*fun createOrder(toCreate: Order): Long {
         val statement = dataSource.connection.prepareStatement("INSERT INTO orders (order_urgency, order_amount_of_photos, order_discount, order_cost, order_date, order_completion_date, order_type, branch_office_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)
         statement.setString(1, toCreate.urgency)
         statement.setInt(2, toCreate.amountOfPhotos)
@@ -86,5 +86,5 @@ class OrderDao(private val dataSource: DataSource) {
         val statement = dataSource.connection.prepareStatement("DELETE FROM orders WHERE order_id = ?")
         statement.setLong(1, id)
         statement.executeUpdate()
-    }
+    }*/
 }

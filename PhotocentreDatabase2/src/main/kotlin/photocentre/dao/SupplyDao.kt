@@ -43,7 +43,7 @@ class SupplyDao(private val dataSource: DataSource) {
     }
 
     //TODO LAZY LOADING
-    fun findSupply(id: Long): Supply? {
+    /*fun findSupply(id: Long): Supply? {
         val statement =
             dataSource.connection.prepareStatement("SELECT supply_id, supply_cost, supplier_id FROM supplies WHERE supply_id = ?")
         statement.setLong(1, id)
@@ -57,7 +57,7 @@ class SupplyDao(private val dataSource: DataSource) {
         } else {
             null
         }
-    }
+    }*/
 
     fun updateSupply(supply: Supply) {
         val statement =

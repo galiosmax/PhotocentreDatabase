@@ -1,9 +1,9 @@
-CREATE SEQUENCE workers_sqs;
+create sequence workers_sqs;
 
-CREATE TABLE if not exists Workers
+create table if not exists Workers
 (
-  worker_id           BIGINT PRIMARY KEY DEFAULT NEXTVAL('workers_sqs'),
-  worker_name         VARCHAR(256) NOT NULL,
-  worker_area_of_work VARCHAR(256) NOT NULL,
-  worker_position     VARCHAR(256) NOT NULL
+  worker_id           bigint primary key default nextval('workers_sqs'),
+  worker_name         varchar(256) not null,
+  worker_area_of_work varchar(256) not null,
+  worker_position     varchar(256) not null
 );

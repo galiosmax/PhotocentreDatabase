@@ -6,7 +6,7 @@ import javax.sql.DataSource
 
 class WorkerDao(private val dataSource: DataSource) {
     
-    fun createWorker(toCreate: Worker): Long {
+    /*fun createWorker(toCreate: Worker): Long {
         val statement = dataSource.connection.prepareStatement("INSERT INTO workers (worker_name, worker_area_of_work, worker_position) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS)
         statement.setString(1, toCreate.name)
         statement.setString(2, toCreate.areaOfWork)
@@ -61,6 +61,6 @@ class WorkerDao(private val dataSource: DataSource) {
         val statement = dataSource.connection.prepareStatement("DELETE FROM worker WHERE worker_id = ?")
         statement.setLong(1, id)
         statement.executeUpdate()
-    }
+    }*/
 
 }

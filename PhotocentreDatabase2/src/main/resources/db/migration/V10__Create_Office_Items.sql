@@ -1,8 +1,8 @@
-CREATE SEQUENCE office_items_sqs;
+create sequence office_items_sqs;
 
 create table if not exists Office_Items
 (
-  office_item_id          int primary key DEFAULT NEXTVAL('office_items_sqs'),
+  office_item_id          int primary key default nextval('office_items_sqs'),
   office_item_purpose     varchar(256)                                                                         not null,
   office_item_amount      int check (office_item_amount >= 0)                                                  not null,
   office_item_recommended int check (office_item_recommended >= 0)                                             not null,

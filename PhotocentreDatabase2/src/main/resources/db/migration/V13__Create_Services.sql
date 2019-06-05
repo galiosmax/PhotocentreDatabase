@@ -1,9 +1,9 @@
-CREATE SEQUENCE services_sqs;
+create sequence services_sqs;
 
-CREATE TABLE if not exists Services
+create table if not exists Services
 (
-  service_id       BIGINT PRIMARY KEY DEFAULT NEXTVAL('services_sqs'),
-  service_name     VARCHAR(256)                                                                             NOT NULL,
-  service_cost     NUMERIC(10, 2) check (service_cost >= 0)                                                 NOT NULL,
-  branch_office_id INT REFERENCES branch_offices (branch_office_id) ON DELETE CASCADE ON UPDATE CASCADE     NOT NULL
+  service_id       bigint primary key default nextval('services_sqs'),
+  service_name     varchar(256)                                                                             not null,
+  service_cost     numeric(10, 2) check (service_cost >= 0)                                                 not null,
+  branch_office_id int references branch_offices (branch_office_id) on delete cascade on update cascade     not null
 );

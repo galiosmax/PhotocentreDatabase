@@ -1,0 +1,396 @@
+--1
+--Получить перечень и общее число пунктов приема заказов на
+--фотоработы по филиалам, по киоскам приема заказов, в целом по
+--фотоцентру.
+
+--По филиалам
+--findBranchOffice(..) from BranchOfficeDao
+select branch_office_id, branch_office_address
+from branch_offices;
+
+
+--По киоскам
+--findKiosk(..) from KioskDao
+select kiosk_id, kiosk_address
+from kiosks;
+
+
+--Общее количество по филиалам
+--countBranchOffices() from BranchOfficeDao
+select count(*) as Total_Offices
+from branch_offices;
+
+
+--Общее количество по киоскам
+select count(*) as Total_Kiosks
+from kiosks;
+
+
+--Если надо в целом, то можно офисы с их киосками
+select branch_offices.branch_office_id as office_id,
+branch_offices.branch_office_address as office_address,
+kiosks.kiosk_id as kiosk_id,
+kiosks.kiosk_address as kiosk_address 
+from branch_offices 
+left join kiosks 
+on branch_offices.branch_office_id = kiosks.branch_office_id
+order by office_id, kiosk_id;
+
+
+--2
+--Получить перечень и общее число заказов на фотоработы по
+--филиалам, киоскам приема заказов, в целом по фотоцентру,
+--поступивших в течение некоторого периода времени.
+
+--По филиалам
+select orders.branch_office_id,
+orders.order_id,
+branch_offices.branch_office_address,
+orders.order_cost,
+orders.order_date,
+customers.customer_name,
+orders.order_urgency
+from orders
+left join branch_offices 
+on orders.branch_office_id = branch_offices.branch_office_id
+left join kiosks 
+on orders.kiosk_id = kiosks.kiosk_id 
+join customers 
+on orders.customer_id = customers.customer_id
+where order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-30','YYYY-MM-dd')
+order by orders.branch_office_id, orders.order_id, orders.order_cost, orders.order_urgency;
+
+
+--По киоскам
+select orders.kiosk_id,
+orders.order_id,
+branch_offices.branch_office_address,
+orders.order_cost,
+orders.order_date,
+customers.customer_name,
+orders.order_urgency
+from orders
+left join branch_offices 
+on orders.branch_office_id = branch_offices.branch_office_id
+left join kiosks 
+on orders.kiosk_id = kiosks.kiosk_id 
+join customers 
+on orders.customer_id = customers.customer_id 
+where order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-30','YYYY-MM-dd')
+order by orders.kiosk_id, orders.order_id, orders.order_cost, orders.order_urgency;
+
+
+--Общее количество по филиалам
+select branch_office_id, count(branch_office_id)
+from orders
+where order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-30','YYYY-MM-dd')
+group by branch_office_id;
+
+
+--Общее количество по киоскам
+select kiosk_id, count(kiosk_id)
+from ordersx
+where order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-04','YYYY-MM-dd')
+group by kiosk_id;
+
+
+--В целом/В течение времени
+select order_id, branch_offices.branch_office_address, order_cost, order_date, customers.customer_name, order_urgency 
+from orders
+left join branch_offices 
+on orders.branch_office_id = branch_offices.branch_office_id
+left join kiosks 
+on orders.kiosk_id = kiosks.kiosk_id 
+join customers 
+on orders.customer_id = customers.customer_id 
+where order_date between (select min(order_date) from orders) and to_date('2018-12-30','YYYY-MM-dd')
+order by order_id;
+
+
+--3
+--Получить перечень и общее число заказов (отдельно простых и
+--срочных) на отдельные виды фоторабот по указанному филиалу,
+--киоску приема заказов, поступивших в течение некоторого периода
+--времени.
+
+--Вроде вообще всё собрал сюда
+select order_id, branch_offices.branch_office_address, order_cost, order_date, customers.customer_name, order_urgency 
+from orders 
+left join branch_offices 
+on orders.branch_office_id = branch_offices.branch_office_id
+left join kiosks 
+on orders.kiosk_id = kiosks.kiosk_id 
+join customers 
+on orders.customer_id = customers.customer_id 
+where order_type in ('Both')
+and order_date between (select min(order_date) from orders) and to_date('2018-12-30','YYYY-MM-dd')
+and orders.branch_office_id = 2
+and orders.kiosk_id = 6
+order by order_id;
+
+
+--4
+--Получить сумму выручки с заказов (отдельно простых и срочных)
+--на отдельные виды фоторабот по указанному филиалу, киоску
+--приема заказов, поступивших в течение некоторого периода времени.
+
+--По указанному филиалу
+select sum(case when order_urgency = 'Common' then order_cost else 0 end) as common_sum,
+sum(case when order_urgency = 'Urgent' then order_cost else 0 end) as urgent_sum
+from orders
+where branch_office_id = 1
+and order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-04','YYYY-MM-dd');
+
+
+--По указанному киоску
+select sum(case when order_urgency = 'Common' then order_cost else 0 end) as common_sum,
+sum(case when order_urgency = 'Urgent' then order_cost else 0 end) as urgent_sum
+from orders
+where kiosk_id = 1
+and order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-04','YYYY-MM-dd');
+
+
+--В течение периода времени
+select sum(case when order_urgency = 'Common' then order_cost else 0 end) as common_sum,
+sum(case when order_urgency = 'Urgent' then order_cost else 0 end) as urgent_sum
+from orders
+where order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-04','YYYY-MM-dd');
+
+
+--5
+--Получить количество отпечатанных фотографий в рамках простых
+--и срочных заказов по указанному филиалу, киоску приема заказов,
+--фотоцентру в целом за некоторый период времени.
+
+--По филиалу
+select count(photo_id)
+from Photos 
+join Films 
+on Photos.film_id = Films.film_id
+join Orders 
+on Films.order_id = Orders.order_id
+where Orders.branch_office_id = 1
+and Orders.order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-04','YYYY-MM-dd');
+
+
+--По киоску
+select count(photo_id)
+from Photos 
+join Films
+on Photos.film_id = Films.film_id
+join Orders
+on Films.order_id = Orders.order_id
+where Orders.kiosk_id = 1
+and Orders.order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-04','YYYY-MM-dd');
+
+
+--В течение периода времени
+select count(photo_id)
+from Photos 
+join Films
+on Photos.film_id = Films.film_id
+join Orders
+on Films.order_id = Orders.order_id
+where Orders.order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-04','YYYY-MM-dd');
+
+
+--6
+--Получить количество проявленных фотопленок в рамках простых и
+--срочных заказов по указанному филиалу, киоску приема заказов,
+--фотоцентру в целом за некоторый период времени.
+
+--По филиалу
+select count(film_id)
+from orders
+left join films
+on films.order_id = orders.order_id
+where branch_office_id = 1
+and orders.order_date between (select min(order_date) from orders) and to_date('2018-12-30','YYYY-MM-dd')
+and orders.order_type in ('Film processing', 'Both');
+
+
+--По киоску
+select count(film_id)
+from orders
+left join films
+on films.order_id = orders.order_id
+where kiosk_id = 1
+and orders.order_date between (select min(order_date) from orders) and to_date('2018-12-30','YYYY-MM-dd')
+and orders.order_type in ('Film processing', 'Both');
+
+
+--В целом за период времени
+select count(film_id)
+from orders
+left join films
+on films.order_id = orders.order_id
+where orders.order_date between (select min(order_date) from orders) and to_date('2018-12-30','YYYY-MM-dd')
+and orders.order_type in ('Film processing', 'Both');
+
+
+--7
+--Получить перечень поставщиков в целом по фотоцентру,
+--поставщиков отдельных видов фототоваров, сделавших поставки в
+--некоторый период, поставки определенного объема.
+
+--В целом
+select * from suppliers;
+
+
+--По видам
+select * from suppliers
+where supplier_specialization in (?);
+
+
+--По времени
+select distinct supplier_name
+from
+(
+	select suppliers.supplier_id,
+	supplier_name,
+	supplier_specialization
+	from suppliers
+	left join supplies
+	on supplies.supplier_id = suppliers.supplier_id
+	where supply_date between (select min(supply_date) from supplies) and to_date('2018-09-20','YYYY-MM-dd')
+	order by supply_date
+)
+order by supplier_name;
+
+
+--По объему
+select suppliers.supplier_id,
+supplier_name,
+supplier_specialization,
+supply_item_amount,
+supply_date,
+supply_completion_date
+from suppliers
+left join supplies
+on supplies.supplier_id = suppliers.supplier_id
+join supply_items
+on supply_items.supply_id = supplies.supply_id
+where supply_date between (select min(supply_date) from supplies) and to_date('2018-09-20','YYYY-MM-dd')
+and supply_item_amount > 20
+order by supply_item_amount desc, supply_date;
+
+
+--8
+--Получить список клиентов в целом по фотоцентру, клиентов
+--указанного филиала, имеющих скидки, сделавших заказы определенного объема.
+
+--В целом
+select * from customers;
+
+
+--По филиалу
+select customer_name,
+branch_offices.branch_office_id,
+branch_offices.branch_office_address
+from customers
+join professionals
+on customers.professional_id = professionals.professional_id
+join branch_offices
+on professionals.branch_office_id = branch_offices.branch_office_id;x	
+
+
+--По скидкам
+select customer_name, customer_discount
+from customers
+where customer_discount > 0 or professional_id is not null;
+
+
+--По объему
+select customers.customer_name, count(orders.customer_id) as orders_amnt
+from orders
+left join customers
+on orders.customer_id = customers.customer_id
+group by customers.customer_name
+having count(orders.customer_id) > 1
+order by orders_amnt desc;
+
+
+--9
+--Получить сумму выручки от реализации фототоваров в целом по
+--фотоцентру, по указанному филиалу, проданных в течение
+--некоторого периода времени.
+
+--В целом
+select sum(sold_item_cost) 
+from sold_items
+where sold_item_date between (SELECT MIN(sold_item_date) FROM sold_items) and to_date('2019-02-28','YYYY-MM-dd');
+
+
+--По филиалу
+select sum(sold_item_cost) 
+from sold_items
+where branch_office_id = 1
+and sold_item_date between (SELECT MIN(sold_item_date) FROM sold_items) and to_date('2019-02-28','YYYY-MM-dd');
+
+
+--10
+--Получить перечень фототоваров и фирм, их производящих, которые
+--пользуются наибольшим спросом в целом по фотоцентру, в указанном филиале. 
+
+--В целом
+select supplier_name, count(sold_item_name) as summ
+from sold_items
+join supply_items
+on sold_item_name = supply_item_name
+join supplies
+on supply_items.supply_id = supplies.supply_id
+join suppliers
+on supplies.supplier_id = suppliers.supplier_id
+group by supplier_name
+order by summ desc;
+--это наверн придется переписать через лимиты
+
+
+--По филиалу
+select supplier_name, count(sold_item_name) as summ
+from sold_items
+join supply_items
+on sold_item_name = supply_item_name
+join supplies
+on supply_items.supply_id = supplies.supply_id
+join suppliers
+on supplies.supplier_id = suppliers.supplier_id
+where sold_items.branch_office_id = 1  
+group by supplier_name
+order by summ desc;
+
+
+--11
+--Получить перечень реализованных фототоваров и объемы их
+--реализации в целом по фотоцентру, по указанному филиалу,
+--проданных в течение некоторого периода времени.
+
+--В целом
+select sold_item_name, count(*) 
+from sold_items
+where sold_item_date between (SELECT MIN(sold_item_date) FROM sold_items) and to_date('2019-02-28','YYYY-MM-dd')
+group by sold_item_name;
+
+
+--По филиалу
+select sold_item_name, count(*) 
+from sold_items
+where sold_item_date between (SELECT MIN(sold_item_date) FROM sold_items) and to_date('2019-02-28','YYYY-MM-dd')
+and branch_office_id = 1
+group by sold_item_name;
+
+
+--12
+--Получить перечень рабочих мест фотоцентра в целом и указанного профиля.
+
+--В целом
+select worker_position, worker_name
+from workers
+order by worker_position;
+
+
+--По специализации
+select worker_position, worker_name
+from workers
+where worker_position in ('Top_Worker')
+order by worker_position;

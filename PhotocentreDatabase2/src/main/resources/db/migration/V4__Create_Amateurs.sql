@@ -1,7 +1,7 @@
-CREATE SEQUENCE amateurs_sqs;
+create sequence amateurs_sqs;
 
-CREATE TABLE if not exists Amateurs
+create table if not exists Amateurs
 (
-  amateur_id         BIGINT PRIMARY KEY DEFAULT NEXTVAL('amateurs_sqs'),
-  amateur_expirience INT CHECK (amateur_expirience BETWEEN 0 AND 100) default 0 NOT NULL
+  amateur_id         bigint primary key default nextval('amateurs_sqs'),
+  amateur_experience int check (amateur_experience between 0 and 100) default 0 not null
 );

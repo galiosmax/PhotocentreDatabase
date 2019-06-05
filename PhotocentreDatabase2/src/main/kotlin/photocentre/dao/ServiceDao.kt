@@ -7,7 +7,7 @@ import javax.sql.DataSource
 
 class ServiceDao(private val dataSource: DataSource) {
 
-    fun createService(toCreate: Service): Long {
+    /*fun createService(toCreate: Service): Long {
         val statement = dataSource.connection.prepareStatement(
             "INSERT INTO services (service_name, service_cost, service_date, branch_office_id) VALUES(?, ?, ?, ?)",
             Statement.RETURN_GENERATED_KEYS
@@ -80,5 +80,5 @@ class ServiceDao(private val dataSource: DataSource) {
         val statement = dataSource.connection.prepareStatement("DELETE FROM services WHERE service_id = ?")
         statement.setLong(1, id)
         statement.executeUpdate()
-    }
+    }*/
 }

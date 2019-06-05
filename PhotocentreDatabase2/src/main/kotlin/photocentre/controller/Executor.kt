@@ -8,7 +8,7 @@ class Executor(private val dataSource: PhotocentreDataSource,
                private val amateurDao: AmateurDao,
                private val branchOfficeDao: BranchOfficeDao,
                private val customerDao: CustomerDao,
-               private val itemDao: ItemDao,
+              // private val itemDao: ItemDao,
                private val kioskDao: KioskDao,
                private val orderDao: OrderDao,
                private val photoDao: PhotoDao,
@@ -17,7 +17,7 @@ class Executor(private val dataSource: PhotocentreDataSource,
                private val supplierDao: SupplierDao,
                private val supplyDao: SupplyDao,
                private val workerDao: WorkerDao
-) {
+) /*{
 
     fun createBranchOffice(toCreate: BranchOffice): Long {
         return transaction(dataSource) {
@@ -393,4 +393,4 @@ fun <T> transaction(dataSource: PhotocentreDataSource, body: () -> T) : T {
             throw e
         }
     }
-}
+}*/

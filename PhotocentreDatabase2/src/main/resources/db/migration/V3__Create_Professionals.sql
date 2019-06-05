@@ -1,8 +1,8 @@
-CREATE SEQUENCE professionals_sqs;
+create sequence professionals_sqs;
 
-CREATE TABLE if not exists Professionals
+create table if not exists Professionals
 (
-  professional_id       BIGINT PRIMARY KEY DEFAULT NEXTVAL('professionals_sqs'),
-  professional_discount INT CHECK (professional_discount BETWEEN 0 AND 100)  default 0                                                               NOT NULL,
-  branch_office_id      INT REFERENCES branch_offices (branch_office_id) ON DELETE CASCADE ON UPDATE CASCADE                                         NOT NULL
+  professional_id       bigint primary key default nextval('professionals_sqs'),
+  professional_discount int check (professional_discount between 0 and 100)  default 0                                                               not null,
+  branch_office_id      int references branch_offices (branch_office_id) on delete cascade on update cascade                                         not null
 );

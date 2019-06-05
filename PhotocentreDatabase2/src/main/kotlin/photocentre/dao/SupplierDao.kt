@@ -6,7 +6,7 @@ import javax.sql.DataSource
 
 class SupplierDao(private val dataSource: DataSource) {
 
-    fun createSupplier(toCreate: Supplier): Long {
+   /* fun createSupplier(toCreate: Supplier): Long {
         val statement = dataSource.connection.prepareStatement(
             "INSERT INTO suppliers (supplier_name, supplier_specialization) VALUES(?, ?)",
             Statement.RETURN_GENERATED_KEYS
@@ -70,5 +70,5 @@ class SupplierDao(private val dataSource: DataSource) {
         val statement = dataSource.connection.prepareStatement("DELETE FROM suppliers WHERE supplier_id = ?")
         statement.setLong(1, id)
         statement.executeUpdate()
-    }
+    }*/
 }
