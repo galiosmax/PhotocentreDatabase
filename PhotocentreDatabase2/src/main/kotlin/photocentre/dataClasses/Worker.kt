@@ -7,6 +7,6 @@ data class Worker
 (
         val id: Long? = null,
         val name: String = "",
-        val areaOfWork: AreaOfWork,
-        val position: Position
+        val areaOfWork: AreaOfWork? = null,
+        val position: Position? = null
 )

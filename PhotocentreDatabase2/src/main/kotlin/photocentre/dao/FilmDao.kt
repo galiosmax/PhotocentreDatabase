@@ -22,7 +22,11 @@ class FilmDao(private val dataSource: DataSource) {
         } else {
             statement.setNull(2, Types.BIGINT)
         }
-        statement.setLong(3, film.order.id!!)
+        if (film.order != null) {
+            statement.setLong(3, film.order.id!!)
+        } else {
+            statement.setNull(3, Types.BIGINT)
+        }
         statement.executeUpdate()
         val generated = statement.generatedKeys
         generated.next()
@@ -42,7 +46,11 @@ class FilmDao(private val dataSource: DataSource) {
             } else {
                 statement.setNull(2, Types.BIGINT)
             }
-            statement.setLong(3, film.order.id!!)
+            if (film.order != null) {
+                statement.setLong(3, film.order.id!!)
+            } else {
+                statement.setNull(3, Types.BIGINT)
+            }
             statement.addBatch()
         }
 
@@ -57,7 +65,7 @@ class FilmDao(private val dataSource: DataSource) {
 
     fun findFilm(id: Long): Film? {
         val statement = dataSource.connection.prepareStatement(
-                "SELECT film_id, film_name, sold_item_id, order_id FROM films WHERE film_id = ?"
+                "select film_id, film_name, sold_item_id, order_id from films where film_id = ?"
         )
         statement.setLong(1, id)
         val resultSet = statement.executeQuery()
@@ -86,7 +94,11 @@ class FilmDao(private val dataSource: DataSource) {
         } else {
             statement.setNull(2, Types.BIGINT)
         }
-        statement.setLong(3, film.order.id!!)
+        if (film.order != null) {
+            statement.setLong(3, film.order.id!!)
+        } else {
+            statement.setNull(3, Types.BIGINT)
+        }
         statement.setLong(4, film.id!!)
 
         statement.executeUpdate()

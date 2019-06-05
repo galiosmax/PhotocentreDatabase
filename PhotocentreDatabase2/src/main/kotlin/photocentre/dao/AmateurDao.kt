@@ -46,7 +46,9 @@ class AmateurDao(private val dataSource: DataSource) {
         statement.setLong(1, id)
         val resultSet = statement.executeQuery()
         return if (resultSet.next()) {
-            Amateur(resultSet.getLong("amateur_id"), resultSet.getInt("amateur_experience"))
+            Amateur(
+                    id = resultSet.getLong("amateur_id"),
+                    experience = resultSet.getInt("amateur_experience"))
         } else {
             null
         }

@@ -6,5 +6,5 @@ data class Supplier
 (
         val id: Long? = null,
         val name: String = "",
-        val specialization: ItemType
+        val specialization: ItemType? = null
 )
