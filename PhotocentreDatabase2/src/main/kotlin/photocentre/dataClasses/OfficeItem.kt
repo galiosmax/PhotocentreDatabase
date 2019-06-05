@@ -1,12 +1,11 @@
 package photocentre.dataClasses
 
-import photocentre.enums.OfficeItemPurpose
 import photocentre.enums.ItemType
 
 data class OfficeItem
 (
         val id: Long?,
-        val purpose: Boolean,
+        val forSale: Boolean,
         val amount: Int = 0,
         val recommendedAmount: Int = 0,
         val criticalAmount: Int = 0,

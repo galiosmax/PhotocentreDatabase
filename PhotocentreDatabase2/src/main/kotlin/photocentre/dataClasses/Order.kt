@@ -7,7 +7,7 @@ import java.sql.Date
 data class Order
 (
         val id: Long?,
-        val urgency: Urgency,
+        val urgent: Boolean,
         val discount: Int = 0,
         val cost: Float = 0f,
         val date: Date = Date(java.util.Date().time),
