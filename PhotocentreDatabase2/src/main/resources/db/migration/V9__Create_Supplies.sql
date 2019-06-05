@@ -6,5 +6,5 @@ create table if not exists Supplies
   supply_cost            numeric(10, 2) check (supply_cost >= 0)                                                         not null,
   supply_date            date default current_date                                                                       not null,
   supply_completion_date date,
-  supplier_id            int references suppliers (supplier_id) on delete cascade on update cascade                      not null
+  supplier_id            bigint references suppliers (supplier_id) on delete cascade on update cascade                      not null
 );
