@@ -106,7 +106,8 @@ class FilmDao(private val dataSource: DataSource) {
 
     fun deleteFilm(id: Long) {
         val statement = dataSource.connection.prepareStatement(
-                "delete from films where film_id = ?")
+                "delete from films where film_id = ?"
+        )
         statement.setLong(1, id)
         statement.executeUpdate()
     }
