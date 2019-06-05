@@ -8,8 +8,8 @@ class AmateurDao(private val dataSource: DataSource) {
 
     fun createAmateur(toCreate: Amateur): Long {
         val statement = dataSource.connection.prepareStatement(
-            "INSERT INTO amateurs (amateur_experience) VALUES (?)",
-            Statement.RETURN_GENERATED_KEYS
+                "insert into amateurs (amateur_experience) values (?)",
+                Statement.RETURN_GENERATED_KEYS
         )
         statement.setInt(1, toCreate.experience)
         statement.executeUpdate()
@@ -20,8 +20,8 @@ class AmateurDao(private val dataSource: DataSource) {
 
     fun createAmateurs(toCreate: Iterable<Amateur>): List<Long> {
         val statement = dataSource.connection.prepareStatement(
-            "INSERT INTO amateurs (amateur_experience) VALUES(?)",
-            Statement.RETURN_GENERATED_KEYS
+                "insert into amateurs (amateur_experience) values (?)",
+                Statement.RETURN_GENERATED_KEYS
         )
 
         for (amateur in toCreate) {
@@ -40,8 +40,9 @@ class AmateurDao(private val dataSource: DataSource) {
     }
 
     fun findAmateur(id: Long): Amateur? {
-        val statement =
-            dataSource.connection.prepareStatement("SELECT amateur_id, amateur_experience FROM amateurs WHERE amateur_id = ?")
+        val statement = dataSource.connection.prepareStatement(
+                "select amateur_id, amateur_experience from amateurs where amateur_id = ?"
+        )
         statement.setLong(1, id)
         val resultSet = statement.executeQuery()
         return if (resultSet.next()) {
@@ -52,16 +53,18 @@ class AmateurDao(private val dataSource: DataSource) {
     }
 
     fun updateAmateur(amateur: Amateur) {
-        val statement =
-            dataSource.connection.prepareStatement("UPDATE amateurs SET amateur_experience = ? WHERE amateur_id = ?")
+        val statement = dataSource.connection.prepareStatement(
+                "update amateurs set amateur_experience = ? where amateur_id = ?"
+        )
         statement.setInt(1, amateur.experience)
         statement.setLong(2, amateur.id!!)
         statement.executeUpdate()
     }
 
     fun deleteAmateur(id: Long) {
-        val statement =
-            dataSource.connection.prepareStatement("DELETE FROM amateurs WHERE amateur_id = ?")
+        val statement = dataSource.connection.prepareStatement(
+                "delete from amateurs where amateur_id = ?"
+        )
         statement.setLong(1, id)
         statement.executeUpdate()
     }

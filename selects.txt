@@ -281,24 +281,31 @@ order by supply_item_amount desc, supply_date;
 --указанного филиала, имеющих скидки, сделавших заказы определенного объема.
 
 --В целом
+--getAllCustomers() from CustomerDao
 select * from customers;
 
 
 --По филиалу
+--getByOffice() from CustomersDao
 select customer_name,
-branch_offices.branch_office_id,
-branch_offices.branch_office_address
+branch_offices.branch_office_id as office_id,
+branch_offices.branch_office_address as address,
+professional_id
 from customers
 join professionals
 on customers.professional_id = professionals.professional_id
 join branch_offices
-on professionals.branch_office_id = branch_offices.branch_office_id;x	
+on professionals.branch_office_id = branch_offices.branch_office_id
+where professional_id is not null;
 
 
 --По скидкам
-select customer_name, customer_discount
+--getIfDiscount()
+select customer_name, (case when professional_id is not null then professionals.professional_discount else customer_discount end) as customer_discount
 from customers
-where customer_discount > 0 or professional_id is not null;
+join professionals
+where customer_discount > 0 or professional_id is not null
+order by customer_discount desc;
 
 
 --По объему

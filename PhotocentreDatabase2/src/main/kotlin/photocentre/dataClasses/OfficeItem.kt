@@ -6,12 +6,12 @@ import photocentre.enums.ItemType
 data class OfficeItem
 (
         val id: Long?,
-        val purpose: OfficeItemPurpose,
-        val amount: Int,
-        val recommendedAmount: Int,
-        val criticalAmount: Int,
-        val name: String,
-        val cost: Float,
+        val purpose: Boolean,
+        val amount: Int = 0,
+        val recommendedAmount: Int = 0,
+        val criticalAmount: Int = 0,
+        val name: String = "",
+        val cost: Float = 0f,
         val type: ItemType,
         val branchOffice: BranchOffice
 )

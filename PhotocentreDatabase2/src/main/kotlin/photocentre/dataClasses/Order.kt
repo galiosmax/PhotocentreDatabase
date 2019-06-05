@@ -8,12 +8,12 @@ data class Order
 (
         val id: Long?,
         val urgency: Urgency,
-        val discount: Int?,
-        val cost: Float,
-        val date: Date,
-        val completionDate: Date?,
+        val discount: Int = 0,
+        val cost: Float = 0f,
+        val date: Date = Date(java.util.Date().time),
+        val completionDate: Date? = null,
         val type: OrderType,
         val branchOffice: BranchOffice,
-        val kiosk: Kiosk?,
+        val kiosk: Kiosk? = null,
         val customer: Customer
 )

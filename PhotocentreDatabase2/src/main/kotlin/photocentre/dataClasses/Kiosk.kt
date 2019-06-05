@@ -1,9 +1,8 @@
 package photocentre.dataClasses
 
-data class Kiosk
-(
+data class Kiosk(
         val id: Long?,
-        val address: String,
-        val amountOfWorkers: Int,
+        val address: String = "",
+        val amountOfWorkers: Int = 0,
         val branchOffice: BranchOffice
 )

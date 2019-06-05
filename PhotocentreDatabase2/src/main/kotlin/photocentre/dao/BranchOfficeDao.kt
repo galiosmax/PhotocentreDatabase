@@ -13,7 +13,7 @@ class BranchOfficeDao(private val dataSource: DataSource) {
                 Statement.RETURN_GENERATED_KEYS
         )
         statement.setString(1, toCreate.address)
-        statement.setInt(2, toCreate.amountOfWorkers)
+        statement.setInt(2, toCreate.amountOfWorkers!!)
         statement.executeUpdate()
         val generated = statement.generatedKeys
         generated.next()
@@ -28,7 +28,7 @@ class BranchOfficeDao(private val dataSource: DataSource) {
 
         for (branchOffice in toCreate) {
             statement.setString(1, branchOffice.address)
-            statement.setInt(2, branchOffice.amountOfWorkers)
+            statement.setInt(2, branchOffice.amountOfWorkers!!)
             statement.addBatch()
         }
 
@@ -49,7 +49,11 @@ class BranchOfficeDao(private val dataSource: DataSource) {
         statement.setLong(1, id)
         val resultSet = statement.executeQuery()
         return if (resultSet.next()) {
-            BranchOffice(resultSet.getLong("branch_office_id"), resultSet.getString("branch_office_address"), resultSet.getInt("branch_office_amount_of_workers"))
+            BranchOffice(
+                    id = resultSet.getLong("branch_office_id"),
+                    address = resultSet.getString("branch_office_address"),
+                    amountOfWorkers = resultSet.getInt("branch_office_amount_of_workers")
+            )
         } else {
             null
         }
@@ -60,7 +64,7 @@ class BranchOfficeDao(private val dataSource: DataSource) {
                 "update branch_offices set branch_office_address = ?, branch_office_amount_of_workers = ? where branch_office_id = ?"
         )
         statement.setString(1, branchOffice.address)
-        statement.setInt(2, branchOffice.amountOfWorkers)
+        statement.setInt(2, branchOffice.amountOfWorkers!!)
         statement.setLong(3, branchOffice.id!!)
         statement.executeUpdate()
     }
@@ -90,9 +94,8 @@ class BranchOfficeDao(private val dataSource: DataSource) {
 
         while (resultSet.next()) {
             res += BranchOffice(
-                    resultSet.getLong("branch_office_id"),
-                    resultSet.getString("branch_office_address"),
-                    0
+                    id = resultSet.getLong("branch_office_id"),
+                    address = resultSet.getString("branch_office_address")
             )
         }
         return res
@@ -100,13 +103,13 @@ class BranchOfficeDao(private val dataSource: DataSource) {
 
     fun selectBranchOfficesAndKiosks(): List<Pair<BranchOffice, Kiosk>> {
         val statement = dataSource.connection.prepareStatement(
-                "select branch_offices.branch_office_id as office_id,\n" +
-                        "branch_offices.branch_office_address as office_address,\n" +
-                        "kiosks.kiosk_id as kiosk_id,\n" +
-                        "kiosks.kiosk_address as kiosk_address \n" +
-                        "from branch_offices \n" +
-                        "left join kiosks \n" +
-                        "on branch_offices.branch_office_id = kiosks.branch_office_id\n" +
+                "select branch_offices.branch_office_id as office_id," +
+                        "branch_offices.branch_office_address as office_address," +
+                        "kiosks.kiosk_id as kiosk_id," +
+                        "kiosks.kiosk_address as kiosk_address" +
+                        "from branch_offices" +
+                        "left join kiosks" +
+                        "on branch_offices.branch_office_id = kiosks.branch_office_id" +
                         "order by office_id, kiosk_id;"
         )
         val resultSet = statement.executeQuery()
@@ -115,18 +118,16 @@ class BranchOfficeDao(private val dataSource: DataSource) {
         while (resultSet.next()) {
 
             val office = BranchOffice(
-                    resultSet.getLong("office_id"),
-                    resultSet.getString("office_address"),
-                    0
+                    id = resultSet.getLong("office_id"),
+                    address = resultSet.getString("office_address")
             )
 
             res += Pair(
                     office,
                     Kiosk(
-                            resultSet.getLong("kiosk_id"),
-                            resultSet.getString("kiosk_address"),
-                            0,
-                            office
+                            id = resultSet.getLong("kiosk_id"),
+                            address = resultSet.getString("kiosk_address"),
+                            branchOffice = office
                     )
             )
         }
