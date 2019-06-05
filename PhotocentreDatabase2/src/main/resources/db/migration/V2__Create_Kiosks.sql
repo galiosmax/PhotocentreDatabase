@@ -4,6 +4,6 @@ CREATE TABLE Kiosks
 (
   kiosk_id                BIGINT PRIMARY KEY DEFAULT NEXTVAL('kiosks_sqs'),
   kiosk_address           VARCHAR(256)                                                                         NOT NULL,
-  kiosk_amount_of_workers INT                                                                                  NOT NULL,
+  kiosk_amount_of_workers INT check (kiosk_amount_of_workers >= 0)                                             NOT NULL,
   branch_office_id        INT REFERENCES branch_offices (branch_office_id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL
 );
