@@ -85,7 +85,11 @@ class KioskDao(private val dataSource: DataSource) {
 
         statement.setString(1, kiosk.address)
         statement.setInt(2, kiosk.amountOfWorkers)
-        statement.setLong(3, kiosk.branchOffice.id!!)
+        if (kiosk.branchOffice != null) {
+            statement.setLong(3, kiosk.branchOffice.id!!)
+        } else {
+            statement.setNull(3, BIGINT)
+        }
         statement.setLong(4, kiosk.id!!)
         statement.executeUpdate()
     }
