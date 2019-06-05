@@ -5,7 +5,7 @@ import photocentre.enums.Position
 
 data class Worker
 (
-        val id: Long?,
+        val id: Long? = null,
         val name: String = "",
         val areaOfWork: AreaOfWork,
         val position: Position

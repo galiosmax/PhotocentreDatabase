@@ -301,21 +301,40 @@ where professional_id is not null;
 
 --По скидкам
 --getIfDiscount()
-select customer_name, (case when professional_id is not null then professionals.professional_discount else customer_discount end) as customer_discount
-from customers
-join professionals
+select c.customer_name, (
+	case 
+		when (c.professional_id is not null) 
+		then (
+			select professional_discount 
+			from professionals
+			where professional_id = c.professional_id
+			)
+		else (
+			select customer_discount 
+			form customers
+			where customer_id = c.customer_id
+			)
+	end
+	) as customer_discount
+from customers as c
+join professionals as p
 where customer_discount > 0 or professional_id is not null
 order by customer_discount desc;
 
 
 --По объему
-select customers.customer_name, count(orders.customer_id) as orders_amnt
+--getByVolume() from CustomerDao
+select customers.customer_name, count(photo_id) as photo_amnt
 from orders
 left join customers
 on orders.customer_id = customers.customer_id
+join films
+on films.order_id = orders.order_id
+left join photos
+on photos.film_id = films.film_id
 group by customers.customer_name
-having count(orders.customer_id) > 1
-order by orders_amnt desc;
+having count(photo_id) > 1
+order by photo_amnt desc;
 
 
 --9

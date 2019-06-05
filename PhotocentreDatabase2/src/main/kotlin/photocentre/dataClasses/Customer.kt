@@ -2,7 +2,7 @@ package photocentre.dataClasses
 
 data class Customer
 (
-        val id: Long?,
+        val id: Long? = null,
         val name: String = "",
         val discount: Int = 0,
         val professional: Professional? = null,

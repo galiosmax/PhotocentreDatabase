@@ -4,7 +4,7 @@ import photocentre.enums.ItemType
 
 data class OfficeItem
 (
-        val id: Long?,
+        val id: Long? = null,
         val forSale: Boolean,
         val amount: Int = 0,
         val recommendedAmount: Int = 0,

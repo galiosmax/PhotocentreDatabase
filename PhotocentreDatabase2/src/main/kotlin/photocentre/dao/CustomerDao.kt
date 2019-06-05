@@ -123,15 +123,15 @@ class CustomerDao(private val dataSource: DataSource) {
 
     fun getByOffice(branchOffice: BranchOffice): List<Customer> {
         val statement = dataSource.connection.prepareStatement(
-                "select customer_name," +
-                        "branch_offices.branch_office_id as office_id," +
-                        "branch_offices.branch_office_address as address" +
-                        "professional_id" +
-                        "from customers" +
-                        "join professionals" +
-                        "on customers.professional_id = professionals.professional_id" +
-                        "join branch_offices" +
-                        "on professionals.branch_office_id = ?" +
+                "select customer_name, " +
+                        "branch_offices.branch_office_id as office_id, " +
+                        "branch_offices.branch_office_address as address " +
+                        "professional_id " +
+                        "from customers " +
+                        "join professionals " +
+                        "on customers.professional_id = professionals.professional_id " +
+                        "join branch_offices " +
+                        "on professionals.branch_office_id = ? " +
                         "where professional_id is not null"
         )
         statement.setLong(1, branchOffice.id!!)
@@ -154,13 +154,14 @@ class CustomerDao(private val dataSource: DataSource) {
         return res
     }
 
+    //TODO
     fun getIfDiscount(): List<Customer> {
         val statement = dataSource.connection.prepareStatement(
-                "select customer_name," +
-                        "(case when professional_id is not null then professionals.professional_discount else customer_discount end) as customer_discount" +
-                        "from customers" +
-                        "join professionals" +
-                        "where customer_discount > 0 or professional_id is not null" +
+                "select customer_name, " +
+                        "(case when professional_id is not null then professionals.professional_discount else customer_discount end) as customer_discount " +
+                        "from customers " +
+                        "join professionals " +
+                        "where customer_discount > 0 or professional_id is not null " +
                         "order by customer_discount desc"
         )
         val resultSet = statement.executeQuery()
@@ -168,7 +169,6 @@ class CustomerDao(private val dataSource: DataSource) {
 
         while (resultSet.next()) {
             res += Customer(
-                    id = resultSet.getLong("customer_id"),
                     name = resultSet.getString("customer_name"),
                     discount = resultSet.getInt("customer_discount")
             )
@@ -176,5 +176,33 @@ class CustomerDao(private val dataSource: DataSource) {
         return res
     }
 
-    //TODO по объему заказов
+
+    fun getByVolume(volume: Int): List<Pair<Customer, Int>> {
+        val statement = dataSource.connection.prepareStatement(
+                "select customers.customer_name, count(photo_id) as photo_amount " +
+                        "from orders " +
+                        "left join customers " +
+                        "on orders.customer_id = customers.customer_id " +
+                        "join films " +
+                        "on films.order_id = orders.order_id " +
+                        "left join photos " +
+                        "on photos.film_id = films.film_id " +
+                        "group by customers.customer_name " +
+                        "having count(photo_id) >= ? " +
+                        "order by photo_amount desc"
+        )
+        statement.setInt(1, volume)
+        val resultSet = statement.executeQuery()
+        val res = ArrayList<Pair<Customer, Int>>()
+
+        while (resultSet.next()) {
+            res += Pair(
+                    Customer(
+                            name = resultSet.getString("customer_name")
+                    ),
+                    resultSet.getInt("photo_amount")
+            )
+        }
+        return res
+    }
 }
