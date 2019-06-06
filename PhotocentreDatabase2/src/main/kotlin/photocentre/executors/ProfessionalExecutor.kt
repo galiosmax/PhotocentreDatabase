@@ -8,7 +8,7 @@ class ProfessionalExecutor(
         private val dataSource: PhotocentreDataSource,
         private val professionalDao: ProfessionalDao
 ) {
-    fun create(toCreate: Professional): Long {
+    fun createProfessional(toCreate: Professional): Long {
         return transaction(dataSource) {
             professionalDao.createProfessional(toCreate)
         }
