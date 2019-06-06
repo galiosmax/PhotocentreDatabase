@@ -3,7 +3,7 @@ package photocentre.dataClasses
 import photocentre.enums.PaperType
 import photocentre.enums.PhotoFormat
 
-data class Photo
+class Photo
 (
         val id: Long? = null,
         val paperType: PaperType? = null,

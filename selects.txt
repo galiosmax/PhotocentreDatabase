@@ -5,7 +5,7 @@
 
 --По филиалам
 --selectBranchOffices()(..) from BranchOfficeDao
-select branch_office_id, branch_office_address
+/*select branch_office_id, branch_office_address
 from branch_offices;
 
 
@@ -36,7 +36,7 @@ kiosks.kiosk_address as kiosk_address
 from branch_offices 
 left join kiosks 
 on branch_offices.branch_office_id = kiosks.branch_office_id
-order by office_id, kiosk_id;
+order by office_id, kiosk_id;*/
 
 
 --2
@@ -46,7 +46,7 @@ order by office_id, kiosk_id;
 
 --По филиалам
 --getByBranchOffice() from OrderDao
-select orders.branch_office_id as office_id,
+/*select orders.branch_office_id as office_id,
 orders.order_id as order_id,
 branch_offices.branch_office_address as address,
 orders.order_cost as cost,
@@ -112,7 +112,7 @@ on orders.kiosk_id = kiosks.kiosk_id
 join customers 
 on orders.customer_id = customers.customer_id 
 where order_date between (select min(order_date) from orders) and to_date('2018-12-30','YYYY-MM-dd')
-order by order_id;
+order by order_id;*/
 
 
 --3
@@ -125,7 +125,7 @@ order by order_id;
 --getCommonByBranchOfficeAndType()
 --getCommonByKioskAndType()
 --getUrgentByBranchOfficeAndType()
-select order_id, branch_offices.branch_office_address, order_cost, order_date, customers.customer_name, order_urgency 
+/*select order_id, branch_offices.branch_office_address, order_cost, order_date, customers.customer_name, order_urgency 
 from orders 
 left join branch_offices 
 on orders.branch_office_id = branch_offices.branch_office_id
@@ -138,7 +138,7 @@ and order_date between (select min(order_date) from orders) and to_date('2018-12
 and orders.branch_office_id = 2
 and orders.kiosk_id = 6
 and orders.ungent = false
-order by order_id;
+order by order_id;*/
 
 
 --4
@@ -148,7 +148,7 @@ order by order_id;
 
 --По указанному филиалу
 --getRevenueByBranchOffice() from OrderDao
-select sum(case when order_urgent then 0 else order_cost end) as common_sum,
+/*select sum(case when order_urgent then 0 else order_cost end) as common_sum,
 sum(case when order_urgent then 0 else order_cost end) as urgent_sum
 from orders
 where branch_office_id = 1
@@ -169,7 +169,7 @@ and order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12
 select sum(case when order_urgency = 'Common' then order_cost else 0 end) as common_sum,
 sum(case when order_urgency = 'Urgent' then order_cost else 0 end) as urgent_sum
 from orders
-where order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-04','YYYY-MM-dd');
+where order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-04','YYYY-MM-dd');*/
 
 
 --5
@@ -178,7 +178,8 @@ where order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-
 --фотоцентру в целом за некоторый период времени.
 
 --По филиалу
-select count(photo_id)
+--countbyBranchOffice() from PhotoDao
+/*select count(photo_id)
 from Photos 
 join Films 
 on Photos.film_id = Films.film_id
@@ -189,6 +190,7 @@ and Orders.order_date between (SELECT MIN(order_date) FROM orders) and to_date('
 
 
 --По киоску
+--countbyKiosk() form PhotoDao
 select count(photo_id)
 from Photos 
 join Films
@@ -200,13 +202,14 @@ and Orders.order_date between (SELECT MIN(order_date) FROM orders) and to_date('
 
 
 --В течение периода времени
+--countByDate() from PhotoDao
 select count(photo_id)
 from Photos 
 join Films
 on Photos.film_id = Films.film_id
 join Orders
 on Films.order_id = Orders.order_id
-where Orders.order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-04','YYYY-MM-dd');
+where Orders.order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-04','YYYY-MM-dd');*/
 
 
 --6
@@ -216,7 +219,7 @@ where Orders.order_date between (SELECT MIN(order_date) FROM orders) and to_date
 
 --По филиалу
 --getAmountByOffice() from FilmDao
-select count(film_id)
+/*select count(film_id)
 from orders
 left join films
 on films.order_id = orders.order_id
@@ -243,7 +246,7 @@ from orders
 left join films
 on films.order_id = orders.order_id
 where orders.order_date between (select min(order_date) from orders) and to_date('2018-12-30','YYYY-MM-dd')
-and orders.order_type in ('Film processing', 'Both');
+and orders.order_type in ('Film processing', 'Both');*/
 
 
 --7
@@ -299,7 +302,7 @@ order by supply_item_amount desc, supply_date;
 
 --В целом
 --getAllCustomers() from CustomerDao
-select * from customers;
+/*select * from customers;
 
 
 --По филиалу
@@ -313,7 +316,7 @@ join professionals
 on customers.professional_id = professionals.professional_id
 join branch_offices
 on professionals.branch_office_id = branch_offices.branch_office_id
-where professional_id is not null;
+where professional_id is not null;*/
 
 
 --По скидкам
@@ -342,7 +345,7 @@ order by customer_discount desc;
 
 --По объему
 --getByVolume() from CustomerDao
-select customers.customer_name, count(photo_id) as photo_amnt
+/*select customers.customer_name, count(photo_id) as photo_amnt
 from orders
 left join customers
 on orders.customer_id = customers.customer_id
@@ -353,7 +356,7 @@ on photos.film_id = films.film_id
 group by customers.customer_name
 having count(photo_id) > 1
 order by photo_amnt desc;
-
+*/
 
 --9
 --Получить сумму выручки от реализации фототоваров в целом по
