@@ -37,4 +37,10 @@ class SupplyExecutor(
             supplyDao.deleteSupply(id)
         }
     }
+
+    fun getAllSupplies(): List<Supply> {
+        return transaction(dataSource) {
+            supplyDao.gelAll()
+        }
+    }
 }

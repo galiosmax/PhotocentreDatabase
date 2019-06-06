@@ -5,43 +5,46 @@ import photocentre.executors.SupplyExecutor
 
 class SupplyController(private val executor: SupplyExecutor) {
 
-    fun createSupply(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (string.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-
-        val supply = Supply(null, args[0].toFloat())
-        return executor.createSupply(supply).toString()
+    fun createSupply(supply: Supply): Supply {
+        val id = executor.createSupply(supply)
+        return Supply(
+                id = id,
+                cost = supply.cost,
+                date = supply.date,
+                completionDate = supply.completionDate,
+                supplier = supply.supplier
+        )
     }
 
-    fun createSupplies(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (string.isEmpty()) {
-            return "args expected"
-        }
+    fun createSupplies(supplies: List<Supply>): List<Supply> {
+        val ids = executor.createSupplies(supplies)
+        val newSupplies = ArrayList<Supply>()
 
-        val toCreate = ArrayList<Supply>()
-
-        for (i in 0 until args.size) {
-            toCreate.add(Supply(null, args[i].toFloat()))
+        for (i in 1..ids.size) {
+            newSupplies += Supply(
+                    id = ids[i],
+                    cost = supplies[i].cost,
+                    date = supplies[i].date,
+                    completionDate = supplies[i].completionDate,
+                    supplier = supplies[i].supplier
+            )
         }
-        return executor.createSupplies(toCreate).toString()
+        return newSupplies
     }
 
-    fun getSupply(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (args.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-        return executor.findSupply(args[0].toLong()).toString()
+    fun getSupply(id: Long): Supply? {
+        return executor.findSupply(id)
     }
-
-    fun deleteSupply(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (args.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-        return executor.deleteSupply(args[0].toLong()).toString()
+    
+    fun updateSupply(supply: Supply): String {
+        return executor.updateSupply(supply).toString()  
+    }
+    
+    fun deleteSupply(id: Long): String {
+        return executor.deleteSupply(id).toString()
+    }
+    
+    fun getAllSupplies(): List<Supply> {
+        return executor.getAllSupplies()
     }
 }

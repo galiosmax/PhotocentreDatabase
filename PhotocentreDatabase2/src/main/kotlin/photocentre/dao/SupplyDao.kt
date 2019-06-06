@@ -1,6 +1,5 @@
 package photocentre.dao
 
-import photocentre.dataClasses.SoldItem
 import photocentre.dataClasses.Supply
 import java.sql.Statement
 import java.sql.Types.BIGINT
