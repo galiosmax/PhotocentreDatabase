@@ -2,7 +2,7 @@ package photocentre.dataClasses
 
 import java.sql.Date
 
-data class Supply
+class Supply
 (
         val id: Long? = null,
         val cost: Float = 0f,

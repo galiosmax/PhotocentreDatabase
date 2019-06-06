@@ -2,7 +2,7 @@ package photocentre.dataClasses
 
 import photocentre.enums.ItemType
 
-data class SupplyItem
+class SupplyItem
 (
         val id: Long? = null,
         val name: String = "",

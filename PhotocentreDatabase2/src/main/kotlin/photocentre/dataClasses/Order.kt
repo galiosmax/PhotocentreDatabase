@@ -4,7 +4,7 @@ import photocentre.enums.Urgency
 import photocentre.enums.OrderType
 import java.sql.Date
 
-data class Order
+class Order
 (
         val id: Long? = null,
         val urgent: Boolean = false,

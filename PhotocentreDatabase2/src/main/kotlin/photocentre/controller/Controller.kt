@@ -2,16 +2,6 @@ package photocentre.controller
 
 class Controller(private val executor: Executor) {
 
-//    fun createPhotocentre(string: String): String {
-//        val args = string.split(",").map { it.trim() }
-//        if (string.isEmpty() || args.size != 1) {
-//            return "1 arg expected"
-//        }
-//
-//        val photocentre = Photocentre(null, args[0])
-//        return executor.createPhotocentre(photocentre).toString()
-//    }
-
     /*fun createBranchOffice(string: String): String {
         val args = string.split(",").map { it.trim() }
         if (string.isEmpty() || args.size != 2) {

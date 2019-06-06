@@ -57,7 +57,7 @@ class SoldItemDao(private val dataSource: DataSource) {
         return res
     }
 
-    fun findOfficeItem(id: Long): SoldItem? {
+    fun findSoldItem(id: Long): SoldItem? {
         val statement = dataSource.connection.prepareStatement(
                 "select sold_item_id, sold_item_name, sold_item_cost, sold_item_date, branch_office_id from sold_items where sold_item_id = ?"
         )

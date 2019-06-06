@@ -1,6 +1,6 @@
 package photocentre.dataClasses
 
-data class Customer
+class Customer
 (
         val id: Long? = null,
         val name: String = "",

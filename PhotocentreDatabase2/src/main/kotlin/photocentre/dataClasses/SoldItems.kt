@@ -2,7 +2,7 @@ package photocentre.dataClasses
 
 import java.sql.Date
 
-data class SoldItem
+class SoldItem
 (
         val id: Long? = null,
         val name: String = "",

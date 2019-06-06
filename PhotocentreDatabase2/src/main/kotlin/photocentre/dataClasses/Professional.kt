@@ -1,6 +1,6 @@
 package photocentre.dataClasses
 
-data class Professional
+class Professional
 (
         val id: Long? = null,
         val discount: Int = 0,
