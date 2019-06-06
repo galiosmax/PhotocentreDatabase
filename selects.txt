@@ -255,15 +255,18 @@ and orders.order_type in ('Film processing', 'Both');*/
 --некоторый период, поставки определенного объема.
 
 --В целом
-select * from suppliers;
+--getAll() from SupplierDao
+/*select * from suppliers;
 
 
 --По видам
+--getBySpecialization() from SupplierDao
 select * from suppliers
 where supplier_specialization in (?);
 
 
 --По времени
+--getByDate() from SupplierDao
 select distinct supplier_name
 from
 (
@@ -280,6 +283,7 @@ order by supplier_name;
 
 
 --По объему
+--getByAmount() from SupplierDao
 select suppliers.supplier_id,
 supplier_name,
 supplier_specialization,
@@ -293,7 +297,7 @@ join supply_items
 on supply_items.supply_id = supplies.supply_id
 where supply_date between (select min(supply_date) from supplies) and to_date('2018-09-20','YYYY-MM-dd')
 and supply_item_amount > 20
-order by supply_item_amount desc, supply_date;
+order by supply_item_amount desc, supply_date;*/
 
 
 --8
@@ -383,7 +387,8 @@ and sold_item_date between (SELECT MIN(sold_item_date) FROM sold_items) and to_d
 --пользуются наибольшим спросом в целом по фотоцентру, в указанном филиале. 
 
 --В целом
-select supplier_name, count(sold_item_name) as summ
+--getTopSuppliers() from SupplierDao
+/*select supplier_name, count(sold_item_name) as summ
 from sold_items
 join supply_items
 on sold_item_name = supply_item_name
@@ -397,6 +402,7 @@ order by summ desc;
 
 
 --По филиалу
+--getTopSuppliersByBranchOffice() from SupplierDao
 select supplier_name, count(sold_item_name) as summ
 from sold_items
 join supply_items
@@ -407,7 +413,7 @@ join suppliers
 on supplies.supplier_id = suppliers.supplier_id
 where sold_items.branch_office_id = 1  
 group by supplier_name
-order by summ desc;
+order by summ desc;*/
 
 
 --11
@@ -436,13 +442,15 @@ group by sold_item_name;*/
 --Получить перечень рабочих мест фотоцентра в целом и указанного профиля.
 
 --В целом
-select worker_position, worker_name
+/*select worker_name, worker_area_of_work, worker_position
 from workers
 order by worker_position;
 
 
 --По специализации
-select worker_position, worker_name
+--getBySpeciazization() from WorkerDao
+select worker_name, worker_area_of_work
 from workers
-where worker_position in ('Top_Worker')
-order by worker_position;
+where worker_area_of_work in (?)
+order by worker_area_of_work;
+*/
