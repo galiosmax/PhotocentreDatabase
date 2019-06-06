@@ -4,13 +4,13 @@ import org.flywaydb.core.Flyway
 import org.postgresql.ds.PGSimpleDataSource
 
 class Db {
-
+    //todo пароль менять не забывай
     val dataSource = PGSimpleDataSource().apply {
         serverName = "localhost"
         portNumber = 5432
         databaseName = "postgres"
         user = "postgres"
-        password = "123"
+        password = "111"
     }
 
     init {

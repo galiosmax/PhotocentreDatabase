@@ -11,7 +11,7 @@ class Main {
             val connection = DriverManager.getConnection(
                     "jdbc:postgresql://localhost:5432/postgres",
                     "postgres",
-                    "123"
+                    "111"
             )
 
             val flyway = Flyway
