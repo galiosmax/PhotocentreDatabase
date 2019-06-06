@@ -18,7 +18,7 @@ class Main {
             val supplyDao = SupplyDao(photocentreDataSource)
             val workerDao = WorkerDao(photocentreDataSource)
             val professionalDao = ProfessionalDao(photocentreDataSource)
-            val controller = Controller(Executor(photocentreDataSource, amateurDao, branchOfficeDao, CustomerDao, kioskDao, orderDao,
+            val controller = BranchOfficeController(Executor(photocentreDataSource, amateurDao, branchOfficeDao, CustomerDao, kioskDao, orderDao,
                     photoDao, serviceDao, itemDao, supplierDao, supplyDao, workerDao, professionalDao, amateurDao))
             generateSequence { print("> "); readLine() }
                     .takeWhile { it != "exit" }

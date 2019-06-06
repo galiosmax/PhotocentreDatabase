@@ -14,7 +14,7 @@ class SoldItemDao(private val dataSource: DataSource) {
         statement.setString(1, toCreate.name)
         statement.setFloat(2, toCreate.cost)
         statement.setDate(3, toCreate.date)
-        statement.setLong(4, toCreate.branchOffice.id!!)
+        statement.setLong(4, toCreate.branchOffice?.id!!)
         statement.executeUpdate()
         val generated = statement.generatedKeys
         generated.next()
@@ -30,7 +30,7 @@ class SoldItemDao(private val dataSource: DataSource) {
             statement.setString(1, item.name)
             statement.setFloat(2, item.cost)
             statement.setDate(3, item.date)
-            statement.setLong(4, item.branchOffice.id!!)
+            statement.setLong(4, item.branchOffice?.id!!)
             statement.addBatch()
         }
 
@@ -65,7 +65,7 @@ class SoldItemDao(private val dataSource: DataSource) {
         statement.setString(1, item.name)
         statement.setFloat(2, item.cost)
         statement.setDate(3, item.date)
-        statement.setLong(4, item.branchOffice.id!!)
+        statement.setLong(4, item.branchOffice?.id!!)
         statement.setLong(5, item.id!!)
 
         statement.executeUpdate()

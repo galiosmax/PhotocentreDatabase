@@ -59,6 +59,21 @@ class BranchOfficeDao(private val dataSource: DataSource) {
         }
     }
 
+//    fun getAllBranchOffices() : List<BranchOffice> {
+//        val statement = dataSource.connection.prepareStatement(
+//                "select * from branch_offices"
+//        )
+//        val res = ArrayList<BranchOffice>()
+//        val resultSet = statement.executeQuery()
+//        while(resultSet.next())
+//            res.add(BranchOffice(
+//                    id = resultSet.getLong("branch_office_id"),
+//                    address = resultSet.getString("branch_office_address"),
+//                    amountOfWorkers = resultSet.getInt("branch_office_amount_of_workers"))
+//            )
+//        return res
+//    }
+
     fun updateBranchOffice(branchOffice: BranchOffice) {
         val statement = dataSource.connection.prepareStatement(
                 "update branch_offices set branch_office_address = ?, branch_office_amount_of_workers = ? where branch_office_id = ?"
@@ -85,9 +100,9 @@ class BranchOfficeDao(private val dataSource: DataSource) {
         return resultSet.getInt("Total_Offices")
     }
 
-    fun selectBranchOffices(): List<BranchOffice> {
+    fun getAllBranchOffices(): ArrayList<BranchOffice> {
         val statement = dataSource.connection.prepareStatement(
-                "select branch_office_id, branch_office_address from branch_offices"
+                "select * from branch_offices"
         )
         val resultSet = statement.executeQuery()
         val res = ArrayList<BranchOffice>()
@@ -95,7 +110,8 @@ class BranchOfficeDao(private val dataSource: DataSource) {
         while (resultSet.next()) {
             res += BranchOffice(
                     id = resultSet.getLong("branch_office_id"),
-                    address = resultSet.getString("branch_office_address")
+                    address = resultSet.getString("branch_office_address"),
+                    amountOfWorkers = resultSet.getInt("branch_office_amount_of_workers")
             )
         }
         return res
