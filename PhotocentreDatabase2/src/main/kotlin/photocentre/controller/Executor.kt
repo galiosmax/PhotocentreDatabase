@@ -26,13 +26,13 @@ class Executor(private val dataSource: PhotocentreDataSource,
         //private val supplyDao: SupplyDao,
         //private val workerDao: WorkerDao
 ) {
-    //
-//    fun createBranchOffice(toCreate: BranchOffice): Long {
-//        return transaction(dataSource) {
-//            branchOfficeDao.createBranchOffice(toCreate)
-//        }
-//    }
-//
+
+    fun createBranchOffice(toCreate: BranchOffice): Long {
+        return transaction(dataSource) {
+            branchOfficeDao.createBranchOffice(toCreate)
+        }
+    }
+
 //    fun createBranchOffices(toCreate: Iterable<BranchOffice>): List<Long> {
 //        return transaction(dataSource) {
 //            branchOfficeDao.createBranchOffices(toCreate)

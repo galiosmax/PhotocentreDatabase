@@ -45,7 +45,8 @@ class MainView : View("Photocentre Database") {
         tab("Offices") {
             splitpane {
                 add(BranchOfficeListFragment(photocentreDataSource))
-                add(BranchOfficeDetailsFragment(photocentreDataSource))
+                add(BranchOfficeCRUDFragment(photocentreDataSource))
+                //add(BranchOfficeDetailsFragment(photocentreDataSource))
             }
         }
         tab("Kiosks") {

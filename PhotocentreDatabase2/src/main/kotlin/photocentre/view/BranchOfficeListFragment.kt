@@ -66,14 +66,14 @@ class BranchOfficeListFragment(photocentreDataSource: PhotocentreDataSource) : F
             columnResizePolicy = SmartResize.POLICY
         }
 
-        bottom = hbox(4.0) {
-            paddingAll = 10
-            button("Create") {
-
-            }
-            button("selectBranchOfficesAndKiosks") {
-
-            }
-        }
+//        bottom = hbox(4.0) {
+//            paddingAll = 10
+//            button("Create") {
+//
+//            }
+//            button("selectBranchOfficesAndKiosks") {
+//
+//            }
+//        }
     }
 }

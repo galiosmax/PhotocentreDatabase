@@ -1,4 +1,5 @@
 package photocentre.controller
+
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import photocentre.dataClasses.BranchOffice
@@ -20,16 +21,11 @@ class BranchOfficeController(val executor: Executor) : Controller() {
 ////        return executor.createPhotocentre(photocentre).toString()
 ////    }
 //
-//    /*fun createBranchOffice(string: String): String {
-//        val args = string.split(",").map { it.trim() }
-//        if (string.isEmpty() || args.size != 2) {
-//            return "2 args expected"
-//        }
-//
-//        val branchOffice = BranchOffice(null, args[0], args[1].toInt())
-//        return executor.createBranchOffice(branchOffice).toString()
-//    }
-//
+    fun createBranchOffice(address: String, amnt: Int): Long {
+        val branchOffice = BranchOffice(-1, address, amnt)
+        return executor.createBranchOffice(branchOffice)
+    }
+
 //    fun createBranchOffices(string: String): String {
 //        val args = string.split(",").map { it.trim() }
 //        if (string.isEmpty() || args.size % 2 != 0) {
@@ -44,7 +40,6 @@ class BranchOfficeController(val executor: Executor) : Controller() {
 //        return executor.createBranchOffices(toCreate).toString()
 //    }
 //
-
 
 
     fun updateBranchOffice(newOffice: BranchOffice) {

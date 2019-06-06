@@ -11,7 +11,7 @@ import tornadofx.*
 
 class BranchOfficeDetailsFragment(photocentreDataSource: PhotocentreDataSource) : Fragment() {
     val branchOfficeModel: BranchOfficeModel by inject()
-    val photocentreDataSource: PhotocentreDataSource by param()
+    //val photocentreDataSource: PhotocentreDataSource by param()
     val branchOfficeDao = BranchOfficeDao(photocentreDataSource)
     val branchOfficeController = BranchOfficeController(Executor(photocentreDataSource, branchOfficeDao))
     var currentID: Long = 0
@@ -34,15 +34,32 @@ class BranchOfficeDetailsFragment(photocentreDataSource: PhotocentreDataSource) 
         label("Amount of workers")
         textfield(branchOfficeModel.amountOfWorkers)
 
-        button("Save") {
-            action {
-                currentID = branchOfficeModel.id.value
-                currentAddress = branchOfficeModel.address.value
-                currentAmount = branchOfficeModel.amountOfWorkers.value
-                branchOfficeController.updateBranchOffice(BranchOffice(currentID, currentAddress, currentAmount))
-                branchOfficeModel.branchOffices.set(branchOfficeController.getBranchOffices().asObservable())
+        buttonbar {
+            button("Save") {
+                enableWhen(branchOfficeModel.dirty)
+                action {
+                    currentID = branchOfficeModel.id.value
+                    currentAddress = branchOfficeModel.address.value
+                    currentAmount = branchOfficeModel.amountOfWorkers.value
+                    branchOfficeController.updateBranchOffice(BranchOffice(currentID, currentAddress, currentAmount))
+                    branchOfficeModel.branchOffices.set(branchOfficeController.getBranchOffices().asObservable())
+                }
+            }
+
+            button("Undo") {
+                enableWhen(branchOfficeModel.dirty)
+                action {
+                    branchOfficeModel.rollback()
+                }
             }
         }
+        button("Back") {
+            action {
+                val branchOfficeCRUDFragment = BranchOfficeCRUDFragment(photocentreDataSource)
+                replaceWith(branchOfficeCRUDFragment)
+            }
+        }
+
     }
 
 //    override fun onSave() {
@@ -64,7 +81,7 @@ class BranchOfficeDetailsFragment(photocentreDataSource: PhotocentreDataSource) 
 //        //}
 //    }
 
-    override fun onDelete() {
-        branchOfficeModel.rollback()
-    }
+//    override fun onDelete() {
+//        branchOfficeModel.rollback()
+//    }
 }

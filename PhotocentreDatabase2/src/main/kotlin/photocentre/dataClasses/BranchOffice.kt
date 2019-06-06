@@ -8,9 +8,9 @@ import photocentre.controller.BranchOfficeController
 import photocentre.controller.Executor
 import tornadofx.*
 
-class BranchOffice(id: Long? = null, address: String = "", amountOfWorkers: Int = 0) {
+class BranchOffice(id: Long = -1, address: String = "", amountOfWorkers: Int = 0) {
 
-    var id: Long by property(id!!)
+    var id: Long by property(id)
     fun idProperty() = getProperty(BranchOffice::id)
 
     var address: String by property(address)
