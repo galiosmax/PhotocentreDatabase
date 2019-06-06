@@ -41,8 +41,13 @@ class BranchOfficeController(private val executor: BranchOfficeExecutor) {
         return executor.deleteBranchOffice(id).toString()
     }
 
-    fun countBranchOffices(): Int? {
-        return executor.countBranchOffices()
+    fun countBranchOffices(): Int {
+        val amount = executor.countBranchOffices()
+        return if(amount != null) {
+            amount
+        } else {
+            0
+        }
     }
 
     fun getAllBranchOffices(): List<BranchOffice> {
