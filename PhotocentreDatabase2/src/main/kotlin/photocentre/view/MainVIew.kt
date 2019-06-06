@@ -16,35 +16,37 @@ import tornadofx.*
 class MainView : View("Photocentre Database") {
     val db = Db()
     val photocentreDataSource = PhotocentreDataSource(db.dataSource)
-    val status: TaskStatus by inject()
-    val branchOfficeDao = BranchOfficeDao(photocentreDataSource)
+    //val status: TaskStatus by inject()
+    //val branchOfficeDao = BranchOfficeDao(photocentreDataSource)
     //val branchOfficeCtrl : BranchOfficeController by param(BranchOfficeController(Executor(photocentreDataSource, branchOfficeDao)))
     //val branchOfficeModel: BranchOfficeModel by inject()
-    override val savable = SimpleBooleanProperty(false)
-    override val deletable = SimpleBooleanProperty(false)
-    override val creatable = SimpleBooleanProperty(false)
+    //override val savable = SimpleBooleanProperty(false)
+    //override val deletable = SimpleBooleanProperty(false)
+    //override val creatable = SimpleBooleanProperty(false)
     //val branchOfficeDao = BranchOfficeDao(photocentreDataSource)
     //val branchOfficeCtrl = BranchOfficeController(Executor(photocentreDataSource, branchOfficeDao))
     //val branchOfficeModel: BranchOfficeModel by inject()
 
-    override fun onDock() {
-        with(workspace) {
-            hbox(4.0) {
-                progressbar(status.progress) {
-                    label(status.message)
-                    visibleWhen { status.running }
-                    paddingAll = 4
-                }
-            }
-        }
-    }
+//    override fun onDock() {
+//        with(workspace) {
+//            hbox(4.0) {
+//                progressbar(status.progress) {
+//                    label(status.message)
+//                    visibleWhen { status.running }
+//                    paddingAll = 4
+//                }
+//            }
+//        }
+//    }
 
     override val root = tabpane {
         tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
         //prefHeight = 600.0
         tab("Offices") {
-            add(BranchOfficeListFragment(photocentreDataSource))
-            //add(BranchOfficeListFragment(photocentreDataSource))
+            splitpane {
+                add(BranchOfficeListFragment(photocentreDataSource))
+                add(BranchOfficeDetailsFragment(photocentreDataSource))
+            }
         }
         tab("Kiosks") {
             add(KioskListFragment())

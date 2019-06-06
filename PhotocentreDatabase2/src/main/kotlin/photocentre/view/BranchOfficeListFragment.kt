@@ -15,7 +15,7 @@ import javafx.scene.control.TableView
 import tornadofx.Stylesheet.Companion.contextMenu
 
 class BranchOfficeListFragment(photocentreDataSource: PhotocentreDataSource) : Fragment() {
-    val photocentreDataSource : PhotocentreDataSource by param()
+    //val photocentreDataSource : PhotocentreDataSource by param()
     val branchOfficeDao = BranchOfficeDao(photocentreDataSource)
     val branchOfficeCtrl = BranchOfficeController(Executor(photocentreDataSource, branchOfficeDao))
     //val branchOfficeCtrl : BranchOfficeController by inject()
@@ -47,7 +47,7 @@ class BranchOfficeListFragment(photocentreDataSource: PhotocentreDataSource) : F
 
             column("ID", BranchOffice::idProperty)
             column("Address", BranchOffice::addressProperty)
-            column("Amnt of Workers", BranchOffice::amountOfWorkersProperty)
+            column("Amount of workers", BranchOffice::amountOfWorkersProperty)
             bindSelected(branchOfficeModel)
             contextmenu {
                 item("Delete").action {
@@ -56,30 +56,24 @@ class BranchOfficeListFragment(photocentreDataSource: PhotocentreDataSource) : F
                     branchOfficeModel.branchOffices.set(branchOfficeCtrl.getBranchOffices().asObservable())
                 }
             }
-            onUserSelect {
-                workspace.dock<BranchOfficeDetailsFragment>()
-            }
+//            onUserSelect {
+//                //var branchOfficeDetailsFragment = BranchOfficeDetailsFragment(branchOfficeCtrl)
+//                workspace.dock<BranchOfficeDetailsFragment>()
+//            }
             //enableCellEditing()
             //enableDirtyTracking()
             //regainFocusAfterEdit()
             columnResizePolicy = SmartResize.POLICY
         }
 
-        right = vbox(4.0) {
+        bottom = hbox(4.0) {
             paddingAll = 10
-            //buttonbar {
             button("Create") {
 
-            }
-            button("Delete") {
-                action {
-
-                }
             }
             button("selectBranchOfficesAndKiosks") {
 
             }
-            //}
         }
     }
 }
