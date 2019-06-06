@@ -1,7 +1,9 @@
 package photocentre.dao
 
-import photocentre.dataClasses.*
-import photocentre.enums.ItemType
+import photocentre.dataClasses.BranchOffice
+import photocentre.dataClasses.Customer
+import photocentre.dataClasses.Kiosk
+import photocentre.dataClasses.Order
 import photocentre.enums.OrderType
 import java.sql.Date
 import java.sql.Statement
