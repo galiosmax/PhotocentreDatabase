@@ -1,6 +1,7 @@
 package photocentre.dao
 
 import photocentre.dataClasses.BranchOffice
+import photocentre.dataClasses.Professional
 import photocentre.dataClasses.Service
 import java.sql.Statement
 import java.sql.Types.BIGINT
@@ -99,5 +100,26 @@ class ServiceDao(private val dataSource: DataSource) {
 
         statement.setLong(1, id)
         statement.executeUpdate()
+    }
+
+    fun gelAll(): List<Service> {
+        val statement = dataSource.connection.prepareStatement(
+                "select * from services"
+        )
+        val resultSet = statement.executeQuery()
+        val res = ArrayList<Service>()
+
+        val branchOfficeDao = BranchOfficeDao(dataSource)
+
+        while (resultSet.next()) {
+
+            res += Service(
+                    id = resultSet.getLong("service_id"),
+                    name = resultSet.getString("service_name"),
+                    cost = resultSet.getFloat("service_cost"),
+                    branchOffice = branchOfficeDao.findBranchOffice(resultSet.getLong("branch_office_id"))
+            )
+        }
+        return res
     }
 }

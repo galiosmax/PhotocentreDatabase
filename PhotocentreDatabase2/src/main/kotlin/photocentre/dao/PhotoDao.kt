@@ -2,6 +2,7 @@ package photocentre.dao
 
 import photocentre.dataClasses.BranchOffice
 import photocentre.dataClasses.Kiosk
+import photocentre.dataClasses.Order
 import photocentre.dataClasses.Photo
 import photocentre.enums.OrderType
 import photocentre.enums.PaperType
@@ -190,5 +191,40 @@ class PhotoDao(private val dataSource: DataSource) {
         } else {
             null
         }
+    }
+
+    fun gelAll(): List<Photo> {
+        val statement = dataSource.connection.prepareStatement(
+                "select * from photos"
+        )
+        val resultSet = statement.executeQuery()
+        val res = ArrayList<Photo>()
+
+        val filmDao = FilmDao(dataSource)
+
+        while (resultSet.next()) {
+            val paperType = when (resultSet.getString("photo_paper_type")) {
+                "PHOTO" -> PaperType.PHOTO
+                "CHEAP" -> PaperType.CHEAP
+                "EXPENSIVE" -> PaperType.EXPENSIVE
+                else -> null
+            }
+
+            val photoFormat = when (resultSet.getString("photo_format")) {
+                "FORMAT_10_15" -> PhotoFormat.FORMAT_10_15
+                "A5" -> PhotoFormat.A5
+                "A4" -> PhotoFormat.A4
+                "A3" -> PhotoFormat.A3
+                else -> null
+            }
+
+            res += Photo(
+                    id = resultSet.getLong("photo_id"),
+                    paperType = paperType,
+                    format = photoFormat,
+                    film = filmDao.findFilm(resultSet.getLong("film_id"))
+            )
+        }
+        return res
     }
 }

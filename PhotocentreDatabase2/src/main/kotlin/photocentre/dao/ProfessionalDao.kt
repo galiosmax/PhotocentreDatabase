@@ -1,7 +1,10 @@
 package photocentre.dao
 
 import photocentre.dataClasses.BranchOffice
+import photocentre.dataClasses.Photo
 import photocentre.dataClasses.Professional
+import photocentre.enums.PaperType
+import photocentre.enums.PhotoFormat
 import java.sql.Statement
 import java.sql.Types.BIGINT
 import javax.sql.DataSource
@@ -97,5 +100,23 @@ class ProfessionalDao(private val dataSource: DataSource) {
         statement.executeUpdate()
     }
 
+    fun gelAll(): List<Professional> {
+        val statement = dataSource.connection.prepareStatement(
+                "select * from professionals"
+        )
+        val resultSet = statement.executeQuery()
+        val res = ArrayList<Professional>()
 
+        val branchOfficeDao = BranchOfficeDao(dataSource)
+
+        while (resultSet.next()) {
+
+            res += Professional(
+                    id = resultSet.getLong("professional_id"),
+                    discount = resultSet.getInt("professional_discount"),
+                    branchOffice = branchOfficeDao.findBranchOffice(resultSet.getLong("branch_office_id"))
+            )
+        }
+        return res
+    }
 }

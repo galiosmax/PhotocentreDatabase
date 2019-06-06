@@ -1,6 +1,7 @@
 package photocentre.dao
 
 import photocentre.dataClasses.BranchOffice
+import photocentre.dataClasses.Service
 import photocentre.dataClasses.SoldItem
 import java.sql.Date
 import java.sql.Statement
@@ -198,4 +199,27 @@ class SoldItemDao(private val dataSource: DataSource) {
         }
         return res
     }
+
+    fun gelAll(): List<SoldItem> {
+        val statement = dataSource.connection.prepareStatement(
+                "select * from sold_items"
+        )
+        val resultSet = statement.executeQuery()
+        val res = ArrayList<SoldItem>()
+
+        val branchOfficeDao = BranchOfficeDao(dataSource)
+
+        while (resultSet.next()) {
+
+            res += SoldItem(
+                    id = resultSet.getLong("sold_item_id"),
+                    name = resultSet.getString("sold_item_name"),
+                    cost = resultSet.getFloat("sold_item_cost"),
+                    date = resultSet.getDate("sold_item_date"),
+                    branchOffice = branchOfficeDao.findBranchOffice(resultSet.getLong("branch_office_id"))
+            )
+        }
+        return res
+    }
+    
 }

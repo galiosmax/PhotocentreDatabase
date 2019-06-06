@@ -1,9 +1,6 @@
 package photocentre.dao
 
-import photocentre.dataClasses.BranchOffice
-import photocentre.dataClasses.Film
-import photocentre.dataClasses.Kiosk
-import photocentre.dataClasses.SoldItem
+import photocentre.dataClasses.*
 import java.sql.Date
 import java.sql.Statement
 import java.sql.Types
@@ -177,5 +174,26 @@ class FilmDao(private val dataSource: DataSource) {
         } else {
             null
         }
+    }
+
+    fun gelAll(): List<Film> {
+        val statement = dataSource.connection.prepareStatement(
+                "select * from films"
+        )
+        val resultSet = statement.executeQuery()
+        val res = ArrayList<Film>()
+
+        val soldItemDao = SoldItemDao(dataSource)
+        val orderDao = OrderDao(dataSource)
+
+        while (resultSet.next()) {
+            res += Film(
+                    id = resultSet.getLong("film_id"),
+                    name = resultSet.getString("film_name"),
+                    soldItem = soldItemDao.findSoldItem(resultSet.getLong("sold_item_id")),
+                    order = orderDao.findOrder(resultSet.getLong("order_id"))
+            )
+        }
+        return res
     }
 }

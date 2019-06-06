@@ -1,6 +1,7 @@
 package photocentre.dao
 
 import photocentre.dataClasses.BranchOffice
+import photocentre.dataClasses.Film
 import photocentre.dataClasses.Kiosk
 import java.sql.Statement
 import java.sql.Types.BIGINT
@@ -65,15 +66,12 @@ class KioskDao(private val dataSource: DataSource) {
         val branchOfficeDao = BranchOfficeDao(dataSource)
 
         if (resultSet.next()) {
-            val branchOffice = branchOfficeDao.findBranchOffice(resultSet.getLong("branch_office_id"))
-            if (branchOffice != null) {
-                return Kiosk(
-                        id = resultSet.getLong("kiosk_id"),
-                        address = resultSet.getString("kiosk_address"),
-                        amountOfWorkers = resultSet.getInt("kiosk_amount_of_workers"),
-                        branchOffice = branchOffice
-                )
-            }
+            return Kiosk(
+                    id = resultSet.getLong("kiosk_id"),
+                    address = resultSet.getString("kiosk_address"),
+                    amountOfWorkers = resultSet.getInt("kiosk_amount_of_workers"),
+                    branchOffice = branchOfficeDao.findBranchOffice(resultSet.getLong("branch_office_id"))
+            )
         }
         return null
     }
@@ -107,24 +105,27 @@ class KioskDao(private val dataSource: DataSource) {
                 "select count(*) as Total_Kiosks from kiosks"
         )
         val resultSet = statement.executeQuery()
-        return if(resultSet.next()) {
+        return if (resultSet.next()) {
             resultSet.getInt("Total_kiosks")
         } else {
             null
         }
     }
 
-    fun selectKiosks(): List<Kiosk> {
+    fun gelAll(): List<Kiosk> {
         val statement = dataSource.connection.prepareStatement(
-                "select kiosk_id, kiosk_address from kiosks"
+                "select * from kiosks"
         )
         val resultSet = statement.executeQuery()
         val res = ArrayList<Kiosk>()
+        val branchOfficeDao = BranchOfficeDao(dataSource)
 
         while (resultSet.next()) {
             res += Kiosk(
                     id = resultSet.getLong("kiosk_id"),
-                    address = resultSet.getString("kiosk_address")
+                    address = resultSet.getString("kiosk_address"),
+                    amountOfWorkers = resultSet.getInt("kiosk_amount_of_workers"),
+                    branchOffice = branchOfficeDao.findBranchOffice(resultSet.getLong("branch_office_id"))
             )
         }
         return res

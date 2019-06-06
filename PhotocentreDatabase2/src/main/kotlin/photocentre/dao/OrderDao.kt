@@ -1,9 +1,6 @@
 package photocentre.dao
 
-import photocentre.dataClasses.BranchOffice
-import photocentre.dataClasses.Customer
-import photocentre.dataClasses.Kiosk
-import photocentre.dataClasses.Order
+import photocentre.dataClasses.*
 import photocentre.enums.ItemType
 import photocentre.enums.OrderType
 import java.sql.Date
@@ -286,7 +283,7 @@ class OrderDao(private val dataSource: DataSource) {
 
         val resultSet = statement.executeQuery()
 
-        return if(resultSet.next()) {
+        return if (resultSet.next()) {
             resultSet.getInt("total_amount")
         } else {
             null
@@ -308,7 +305,7 @@ class OrderDao(private val dataSource: DataSource) {
 
         val resultSet = statement.executeQuery()
 
-        return if(resultSet.next()) {
+        return if (resultSet.next()) {
             resultSet.getInt("total_amount")
         } else {
             null
@@ -486,7 +483,7 @@ class OrderDao(private val dataSource: DataSource) {
         return res
     }
 
-    fun getRevenueByBranchOffice(branchOffice: BranchOffice, dateBegin: Date, dateEnd: Date) : Pair<Float?, Float?>? {
+    fun getRevenueByBranchOffice(branchOffice: BranchOffice, dateBegin: Date, dateEnd: Date): Pair<Float?, Float?>? {
         val statement = dataSource.connection.prepareStatement(
                 "select sum(case when order_urgent then 0 else order_cost end) as common_sum, " +
                         "sum(case when order_urgent then 0 else order_cost end) as urgent_sum " +
@@ -500,7 +497,7 @@ class OrderDao(private val dataSource: DataSource) {
         statement.setDate(3, dateEnd)
 
         val resultSet = statement.executeQuery()
-        
+
         return if (resultSet.next()) {
             Pair<Float?, Float?>(resultSet.getFloat("common_sum"), resultSet.getFloat("urgent_sum"))
         } else {
@@ -508,7 +505,7 @@ class OrderDao(private val dataSource: DataSource) {
         }
     }
 
-    fun getRevenueByKiosk(kiosk: Kiosk, dateBegin: Date, dateEnd: Date) : Float? {
+    fun getRevenueByKiosk(kiosk: Kiosk, dateBegin: Date, dateEnd: Date): Float? {
         val statement = dataSource.connection.prepareStatement(
                 "select sum(order_cost) as common_sum " +
                         "from orders " +
@@ -529,7 +526,7 @@ class OrderDao(private val dataSource: DataSource) {
         }
     }
 
-    fun getRevenueByDate(dateBegin: Date, dateEnd: Date) : Pair<Float?, Float?>? {
+    fun getRevenueByDate(dateBegin: Date, dateEnd: Date): Pair<Float?, Float?>? {
         val statement = dataSource.connection.prepareStatement(
                 "select sum(case when order_urgency = 'Common' then order_cost else 0 end) as common_sum, " +
                         "sum(case when order_urgency = 'Urgent' then order_cost else 0 end) as urgent_sum " +
@@ -549,6 +546,38 @@ class OrderDao(private val dataSource: DataSource) {
         }
     }
 
+    fun gelAll(): List<Order> {
+        val statement = dataSource.connection.prepareStatement(
+                "select * from orders"
+        )
+        val resultSet = statement.executeQuery()
+        val res = ArrayList<Order>()
 
+        val branchOfficeDao = BranchOfficeDao(dataSource)
+        val kioskDao = KioskDao(dataSource)
+        val customerDao = CustomerDao(dataSource)
+
+        while (resultSet.next()) {
+            val type = when (resultSet.getString("order_type")) {
+                "PRINT" -> OrderType.PRINT
+                "PROCESSING" -> OrderType.PROCESSING
+                "BOTH" -> OrderType.BOTH
+                else -> null
+            }
+
+            res += Order(
+                    id = resultSet.getLong("order_id"),
+                    urgent = resultSet.getBoolean("order_urgent"),
+                    cost = resultSet.getFloat("order_cost"),
+                    date = resultSet.getDate("order_date"),
+                    completionDate = resultSet.getDate("order_completion_date"),
+                    type = type,
+                    branchOffice = branchOfficeDao.findBranchOffice(resultSet.getLong("branch_office_id")),
+                    kiosk = kioskDao.findKiosk(resultSet.getLong("kiosk_id")),
+                    customer = customerDao.findCustomer(resultSet.getLong("customer_id"))
+            )
+        }
+        return res
+    }
 
 }

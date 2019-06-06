@@ -85,9 +85,9 @@ class BranchOfficeDao(private val dataSource: DataSource) {
         return resultSet.getInt("Total_Offices")
     }
 
-    fun selectBranchOffices(): List<BranchOffice> {
+    fun gelAll(): List<BranchOffice> {
         val statement = dataSource.connection.prepareStatement(
-                "select branch_office_id, branch_office_address from branch_offices"
+                "select * from branch_offices"
         )
         val resultSet = statement.executeQuery()
         val res = ArrayList<BranchOffice>()
@@ -95,7 +95,8 @@ class BranchOfficeDao(private val dataSource: DataSource) {
         while (resultSet.next()) {
             res += BranchOffice(
                     id = resultSet.getLong("branch_office_id"),
-                    address = resultSet.getString("branch_office_address")
+                    address = resultSet.getString("branch_office_address"),
+                    amountOfWorkers = resultSet.getInt("branch_office_amount_of_workers")
             )
         }
         return res

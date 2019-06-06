@@ -1,5 +1,6 @@
 package photocentre.dao
 
+import photocentre.dataClasses.Kiosk
 import photocentre.dataClasses.OfficeItem
 import photocentre.enums.ItemType
 import java.sql.Statement
@@ -162,5 +163,36 @@ class OfficeItemDao(private val dataSource: DataSource) {
         )
         statement.setLong(1, id)
         statement.executeUpdate()
+    }
+
+    fun gelAll(): List<OfficeItem> {
+        val statement = dataSource.connection.prepareStatement(
+                "select * from office_items"
+        )
+        val resultSet = statement.executeQuery()
+        val res = ArrayList<OfficeItem>()
+        val branchOfficeDao = BranchOfficeDao(dataSource)
+
+        while (resultSet.next()) {
+            val type = when (resultSet.getString("office_item_type")) {
+                "PAPER" -> ItemType.PAPER
+                "INK" -> ItemType.INK
+                "FILM" -> ItemType.FILM
+                else -> null
+            }
+
+            res += OfficeItem(
+                    id = resultSet.getLong("office_item_id"),
+                    forSale = resultSet.getBoolean("office_item_for_sale"),
+                    amount = resultSet.getInt("office_item_amount"),
+                    recommendedAmount = resultSet.getInt("office_item_recommended"),
+                    criticalAmount = resultSet.getInt("office_item_critical"),
+                    name = resultSet.getString("office_item_name"),
+                    cost = resultSet.getFloat("office_item_cost"),
+                    type = type,
+                    branchOffice = branchOfficeDao.findBranchOffice(resultSet.getLong("branch_office_id"))
+            )
+        }
+        return res
     }
 }

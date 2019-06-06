@@ -206,4 +206,26 @@ class CustomerDao(private val dataSource: DataSource) {
         }
         return res
     }
+
+    fun gelAll(): List<Customer> {
+        val statement = dataSource.connection.prepareStatement(
+                "select * from customers"
+        )
+        val resultSet = statement.executeQuery()
+        val res = ArrayList<Customer>()
+
+        val professionalDao = ProfessionalDao(dataSource)
+        val amateurDao = AmateurDao(dataSource)
+
+        while (resultSet.next()) {
+            res += Customer(
+                    id = resultSet.getLong("customer_id"),
+                    name = resultSet.getString("customer_name"),
+                    discount = resultSet.getInt("customer_discount"),
+                    professional = professionalDao.findProfessional(resultSet.getLong("professional_id")),
+                    amateur = amateurDao.findAmateur(resultSet.getLong("amateur_id"))
+            )
+        }
+        return res
+    }
 }

@@ -126,9 +126,7 @@ class WorkerDao(private val dataSource: DataSource) {
 
     fun getAll(): List<Worker> {
         val statement = dataSource.connection.prepareStatement(
-                "select worker_id, worker_name, worker_area_of_work, worker_position " +
-                        "from workers " +
-                        "order by worker_position"
+                "select * from workers"
         )
 
         val resultSet = statement.executeQuery()

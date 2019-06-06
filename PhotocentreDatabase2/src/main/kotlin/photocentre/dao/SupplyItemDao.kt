@@ -1,5 +1,6 @@
 package photocentre.dao
 
+import photocentre.dataClasses.Supply
 import photocentre.dataClasses.SupplyItem
 import photocentre.enums.ItemType
 import java.sql.Statement
@@ -110,5 +111,33 @@ class SupplyItemDao(private val dataSource: DataSource) {
 
         statement.setLong(1, id)
         statement.executeUpdate()
+    }
+
+    fun gelAll(): List<SupplyItem> {
+        val statement = dataSource.connection.prepareStatement(
+                "select * from supply_items"
+        )
+        val resultSet = statement.executeQuery()
+        val res = ArrayList<SupplyItem>()
+
+        val supplyDao = SupplyDao(dataSource)
+
+        while (resultSet.next()) {
+            val itemType = when (resultSet.getString("supply_item_type")) {
+                "FILM" -> ItemType.FILM
+                "INK" -> ItemType.INK
+                "PAPER" -> ItemType.PAPER
+                else -> null
+            }
+
+            res += SupplyItem(
+                    id = resultSet.getLong("supply_item_id"),
+                    name = resultSet.getString("supply_item_name"),
+                    amount = resultSet.getInt("supply_item_amount"),
+                    type = itemType,
+                    supply = supplyDao.findSupply(resultSet.getLong("supply_id"))
+            )
+        }
+        return res
     }
 }

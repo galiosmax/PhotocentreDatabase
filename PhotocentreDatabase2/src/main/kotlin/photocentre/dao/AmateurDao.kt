@@ -1,6 +1,7 @@
 package photocentre.dao
 
 import photocentre.dataClasses.Amateur
+import photocentre.dataClasses.BranchOffice
 import java.sql.Statement
 import javax.sql.DataSource
 
@@ -71,4 +72,19 @@ class AmateurDao(private val dataSource: DataSource) {
         statement.executeUpdate()
     }
 
+    fun gelAll(): List<Amateur> {
+        val statement = dataSource.connection.prepareStatement(
+                "select * from amateurs"
+        )
+        val resultSet = statement.executeQuery()
+        val res = ArrayList<Amateur>()
+
+        while (resultSet.next()) {
+            res += Amateur(
+                    id = resultSet.getLong("amateur_id"),
+                    experience = resultSet.getInt("amateur_experience")
+            )
+        }
+        return res
+    }
 }

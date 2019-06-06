@@ -1,5 +1,6 @@
 package photocentre.dao
 
+import photocentre.dataClasses.SoldItem
 import photocentre.dataClasses.Supply
 import java.sql.Statement
 import java.sql.Types.BIGINT
@@ -104,5 +105,27 @@ class SupplyDao(private val dataSource: DataSource) {
 
         statement.setLong(1, id)
         statement.executeUpdate()
+    }
+
+    fun gelAll(): List<Supply> {
+        val statement = dataSource.connection.prepareStatement(
+                "select * from supplies"
+        )
+        val resultSet = statement.executeQuery()
+        val res = ArrayList<Supply>()
+
+        val supplierDao = SupplierDao(dataSource)
+
+        while (resultSet.next()) {
+
+            res += Supply(
+                    id = resultSet.getLong("supply_id"),
+                    cost = resultSet.getFloat("supply_cost"),
+                    date = resultSet.getDate("supply_date"),
+                    completionDate = resultSet.getDate("supply_completion_date"),
+                    supplier = supplierDao.findSupplier(resultSet.getLong("supplier_id"))
+            )
+        }
+        return res
     }
 }

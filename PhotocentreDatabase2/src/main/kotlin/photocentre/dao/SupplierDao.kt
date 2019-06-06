@@ -97,7 +97,7 @@ class SupplierDao(private val dataSource: DataSource) {
 
     fun getAll(): List<Supplier> {
         val statement = dataSource.connection.prepareStatement(
-                "select supplier_id, supplier_name, supplier_specialization from suppliers"
+                "select * from suppliers"
         )
         val resultSet = statement.executeQuery()
         val res = ArrayList<Supplier>()
