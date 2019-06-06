@@ -2,9 +2,7 @@ package photocentre.dao
 
 import photocentre.dataClasses.BranchOffice
 import photocentre.dataClasses.Kiosk
-import photocentre.dataClasses.Order
 import photocentre.dataClasses.Photo
-import photocentre.enums.OrderType
 import photocentre.enums.PaperType
 import photocentre.enums.PhotoFormat
 import java.sql.Date
@@ -120,7 +118,7 @@ class PhotoDao(private val dataSource: DataSource) {
         statement.executeUpdate()
     }
 
-    fun countbyKiosk(kiosk: Kiosk, dateBegin: Date, dateEnd: Date): Int? {
+    fun countByKiosk(kiosk: Kiosk, dateBegin: Date, dateEnd: Date): Int? {
         val statement = dataSource.connection.prepareStatement(
                 "select count(photo_id) as photo_amount" +
                         "from Photos " +
@@ -145,7 +143,7 @@ class PhotoDao(private val dataSource: DataSource) {
         }
     }
 
-    fun countbyBranchOffice(branchOffice: BranchOffice, dateBegin: Date, dateEnd: Date): Int? {
+    fun countByBranchOffice(branchOffice: BranchOffice, dateBegin: Date, dateEnd: Date): Int? {
         val statement = dataSource.connection.prepareStatement(
                 "select count(photo_id) as photo_amount" +
                         "from Photos " +
@@ -170,7 +168,7 @@ class PhotoDao(private val dataSource: DataSource) {
         }
     }
 
-    fun countbyDate(dateBegin: Date, dateEnd: Date): Int? {
+    fun countByDate(dateBegin: Date, dateEnd: Date): Int? {
         val statement = dataSource.connection.prepareStatement(
                 "select count(photo_id) as photo_amount" +
                         "from Photos " +

@@ -1,8 +1,11 @@
 package photocentre.executors
 
 import photocentre.dao.PhotoDao
+import photocentre.dataClasses.BranchOffice
+import photocentre.dataClasses.Kiosk
 import photocentre.dataClasses.Photo
 import photocentre.main.PhotocentreDataSource
+import java.sql.Date
 
 class PhotoExecutor(
         private val dataSource: PhotocentreDataSource,
@@ -37,4 +40,29 @@ class PhotoExecutor(
             photoDao.deletePhoto(id)
         }
     }
+
+    fun countByKiosk(kiosk: Kiosk, dateBegin: Date, dateEnd: Date): Int? {
+        return transaction(dataSource) {
+            photoDao.countByKiosk(kiosk, dateBegin, dateEnd)
+        }
+    }
+
+    fun countByBranchOffice(branchOffice: BranchOffice, dateBegin: Date, dateEnd: Date): Int? {
+        return transaction(dataSource) {
+            photoDao.countByBranchOffice(branchOffice, dateBegin, dateEnd)
+        }
+    }
+
+    fun countByDate(dateBegin: Date, dateEnd: Date): Int? {
+        return transaction(dataSource) {
+            photoDao.countByDate(dateBegin, dateEnd)
+        }
+    }
+
+    fun getAllPhotos(): List<Photo> {
+        return transaction(dataSource) {
+            photoDao.gelAll()
+        }
+    }
+
 }
