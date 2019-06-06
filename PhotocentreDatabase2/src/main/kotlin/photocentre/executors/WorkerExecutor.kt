@@ -2,6 +2,7 @@ package photocentre.executors
 
 import photocentre.dao.WorkerDao
 import photocentre.dataClasses.Worker
+import photocentre.enums.AreaOfWork
 import photocentre.main.PhotocentreDataSource
 
 class WorkerExecutor(
@@ -35,6 +36,18 @@ class WorkerExecutor(
     fun deleteWorker(id: Long) {
         return transaction(dataSource) {
             workerDao.deleteWorker(id)
+        }
+    }
+
+    fun getBySpeciazization(areaOfWork: AreaOfWork): List<Worker> {
+        return transaction(dataSource) {
+            workerDao.getBySpeciazization(areaOfWork)
+        }
+    }
+
+    fun getAllWorkers(): List<Worker> {
+        return transaction(dataSource) {
+            workerDao.getAll()
         }
     }
 }

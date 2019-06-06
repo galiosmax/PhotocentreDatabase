@@ -1,47 +1,55 @@
 package photocentre.controllers
 
 import photocentre.dataClasses.Worker
+import photocentre.enums.AreaOfWork
 import photocentre.executors.WorkerExecutor
 
 class WorkerController(private val executor: WorkerExecutor) {
 
-    fun createWorker(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (string.isEmpty() || args.size != 3) {
-            return "3 args expected"
-        }
+    fun createWorker(worker: Worker): Worker {
 
-        val worker = Worker(null, args[0], args[1], args[2])
-        return executor.createWorker(worker).toString()
+        val id = executor.createWorker(worker)
+        return Worker(
+                id = id,
+                name = worker.name,
+                areaOfWork = worker.areaOfWork,
+                position = worker.position
+        )
     }
 
-    fun createWorkers(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (string.isEmpty() || args.size % 3 != 0) {
-            return "args mod 3 expected"
-        }
+    fun createWorkers(workers: List<Worker>): List<Worker> {
 
-        val toCreate = ArrayList<Worker>()
+        val ids = executor.createWorkers(workers)
+        val newWorkers = ArrayList<Worker>()
 
-        for (i in 0 until args.size step 3) {
-            toCreate.add(Worker(null, args[i], args[i + 1], args[i + 2]))
+        for (i in 1..ids.size) {
+            newWorkers += Worker(
+                    id = ids[i],
+                    name = workers[i].name,
+                    areaOfWork = workers[i].areaOfWork,
+                    position = workers[i].position
+            )
         }
-        return executor.createWorkers(toCreate).toString()
+        return newWorkers
     }
 
-    fun getWorker(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (args.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-        return executor.findWorker(args[0].toLong()).toString()
+    fun getWorker(id: Long): Worker? {
+        return executor.findWorker(id)
     }
 
-    fun deleteWorker(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (args.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-        return executor.deleteWorker(args[0].toLong()).toString()
+    fun updateWorker(worker: Worker): String {
+        return executor.updateWorker(worker).toString()
+    }
+
+    fun deleteWorker(id: Long): String {
+        return executor.deleteWorker(id).toString()
+    }
+
+    fun getBySpeciazization(areaOfWork: AreaOfWork): List<Worker> {
+        return executor.getBySpeciazization(areaOfWork)
+    }
+
+    fun getAllWorkers():List<Worker> {
+        return executor.getAllWorkers()
     }
 }
