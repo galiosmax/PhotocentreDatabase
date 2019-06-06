@@ -3,19 +3,25 @@ package photocentre.dao
 import photocentre.dataClasses.BranchOffice
 import photocentre.dataClasses.Service
 import java.sql.Statement
+import java.sql.Types.BIGINT
 import javax.sql.DataSource
 
 class ServiceDao(private val dataSource: DataSource) {
 
-    /*fun createService(toCreate: Service): Long {
+    fun createService(service: Service): Long {
         val statement = dataSource.connection.prepareStatement(
-            "INSERT INTO services (service_name, service_cost, service_date, branch_office_id) VALUES(?, ?, ?, ?)",
-            Statement.RETURN_GENERATED_KEYS
+                "insert into services (service_name, service_cost, branch_office_id) values (?, ?, ?)",
+                Statement.RETURN_GENERATED_KEYS
         )
-        statement.setString(1, toCreate.name)
-        statement.setFloat(2, toCreate.cost)
-        statement.setDate(3, toCreate.date)
-        statement.setLong(4, toCreate.branchOffice.id!!)
+
+        statement.setString(1, service.name)
+        statement.setFloat(2, service.cost)
+        if (service.branchOffice != null) {
+            statement.setLong(3, service.branchOffice.id!!)
+        } else {
+            statement.setNull(3, BIGINT)
+        }
+
         statement.executeUpdate()
         val generated = statement.generatedKeys
         generated.next()
@@ -24,15 +30,18 @@ class ServiceDao(private val dataSource: DataSource) {
 
     fun createServices(toCreate: Iterable<Service>): List<Long> {
         val statement = dataSource.connection.prepareStatement(
-            "INSERT INTO services (service_name, service_cost, service_date, branch_office_id) VALUES(?, ?, ?, ?)",
-            Statement.RETURN_GENERATED_KEYS
+                "insert into services (service_name, service_cost, branch_office_id) values (?, ?, ?)",
+                Statement.RETURN_GENERATED_KEYS
         )
 
         for (service in toCreate) {
             statement.setString(1, service.name)
             statement.setFloat(2, service.cost)
-            statement.setDate(3, service.date)
-            statement.setLong(4, service.branchOffice.id!!)
+            if (service.branchOffice != null) {
+                statement.setLong(3, service.branchOffice.id!!)
+            } else {
+                statement.setNull(3, BIGINT)
+            }
             statement.addBatch()
         }
 
@@ -46,19 +55,22 @@ class ServiceDao(private val dataSource: DataSource) {
         return res
     }
 
-    //TODO LAZY LOADING
     fun findService(id: Long): Service? {
-        val statement =
-            dataSource.connection.prepareStatement("SELECT service_id, service_name, service_cost, service_date, branch_office_id FROM services WHERE service_id = ?")
+        val statement = dataSource.connection.prepareStatement(
+                "select service_id, service_name, service_cost, branch_office_id from services where service_id = ?"
+        )
+
         statement.setLong(1, id)
         val resultSet = statement.executeQuery()
+
+        val branchOfficeDao = BranchOfficeDao(dataSource)
+
         return if (resultSet.next()) {
             Service(
-                    resultSet.getLong("service_id"),
-                    resultSet.getString("service_name"),
-                    resultSet.getFloat("service_cost"),
-                    resultSet.getDate("service_date"),
-                    BranchOffice(resultSet.getLong("branch_office_id"), )
+                    id = resultSet.getLong("service_id"),
+                    name = resultSet.getString("service_name"),
+                    cost = resultSet.getFloat("service_cost"),
+                    branchOffice = branchOfficeDao.findBranchOffice(resultSet.getLong("branch_office_id"))
             )
         } else {
             null
@@ -66,19 +78,26 @@ class ServiceDao(private val dataSource: DataSource) {
     }
 
     fun updateService(service: Service) {
-        val statement =
-            dataSource.connection.prepareStatement("UPDATE services SET service_name = ?, service_cost = ?, service_date = ?, branch_office_id = ? WHERE service_id = ?")
+        val statement = dataSource.connection.prepareStatement(
+                "update services set service_name = ?, service_cost = ?, branch_office_id = ? where service_id = ?"
+        )
         statement.setString(1, service.name)
         statement.setFloat(2, service.cost)
-        statement.setDate(3, service.date)
-        statement.setLong(4, service.branchOffice.id!!)
-        statement.setLong(5, service.id!!)
+        if (service.branchOffice != null) {
+            statement.setLong(3, service.branchOffice.id!!)
+        } else {
+            statement.setNull(3, BIGINT)
+        }
+        statement.setLong(4, service.id!!)
         statement.executeUpdate()
     }
 
     fun deleteService(id: Long) {
-        val statement = dataSource.connection.prepareStatement("DELETE FROM services WHERE service_id = ?")
+        val statement = dataSource.connection.prepareStatement(
+                "delete from services where service_id = ?"
+        )
+
         statement.setLong(1, id)
         statement.executeUpdate()
-    }*/
+    }
 }
