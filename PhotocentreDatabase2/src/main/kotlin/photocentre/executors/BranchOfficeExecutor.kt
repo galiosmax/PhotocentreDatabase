@@ -39,7 +39,7 @@ class BranchOfficeExecutor(
         }
     }
 
-    fun countBranchOffices(): Int {
+    fun countBranchOffices(): Int? {
         return transaction(dataSource) {
             branchOfficeDao.countBranchOffices()
         }

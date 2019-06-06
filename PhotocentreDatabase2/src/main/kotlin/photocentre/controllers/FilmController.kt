@@ -1,47 +1,64 @@
 package photocentre.controllers
 
+import photocentre.dataClasses.BranchOffice
 import photocentre.dataClasses.Film
+import photocentre.dataClasses.Kiosk
 import photocentre.executors.FilmExecutor
+import java.sql.Date
 
 class FilmController(private val executor: FilmExecutor) {
 
-    fun createFilm(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (string.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-
-        val film = Film(null, args[0].toInt())
-        return executor.createFilm(film).toString()
+    fun createFilm(film: Film): Film {
+        val id = executor.createFilm(film)
+        return Film(
+                id = id,
+                name = film.name,
+                soldItem = film.soldItem,
+                order = film.order
+        )
     }
 
-    fun createFilms(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (string.isEmpty()) {
-            return "args expected"
-        }
+    fun createFilms(films: List<Film>): List<Film> {
+        val ids = executor.createFilms(films)
+        val newFilms = ArrayList<Film>()
 
-        val toCreate = ArrayList<Film>()
-
-        for (i in 0 until args.size) {
-            toCreate.add(Film(null, args[i].toInt()))
+        for (i in 1..ids.size) {
+            newFilms += Film(
+                    id = ids[i],
+                    name = films[i].name,
+                    soldItem = films[i].soldItem,
+                    order = films[i].order
+            )
         }
-        return executor.createFilms(toCreate).toString()
+        return newFilms
     }
 
-    fun getFilm(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (args.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-        return executor.findFilm(args[0].toLong()).toString()
+    fun getFilm(id: Long): String {
+       return executor.findFilm(id).toString()
     }
 
-    fun deleteFilm(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (args.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-        return executor.deleteFilm(args[0].toLong()).toString()
+    fun updateFilm(film: Film): String {
+        return executor.updateFilm(film).toString()
     }
+
+    fun deleteFilm(id: Long): String {
+        return executor.deleteFilm(id).toString()
+    }
+
+    fun getAmountByOffice(branchOffice: BranchOffice, dateBegin: Date, dateEnd: Date): Int? {
+        return executor.getAmountByOffice(branchOffice, dateBegin, dateEnd)
+    }
+
+    fun getAmountByKiosk(kiosk: Kiosk, dateBegin: Date, dateEnd: Date): Int? {
+        return executor.getAmountByKiosk(kiosk, dateBegin, dateEnd)
+    }
+
+    fun getAmountByDate(dateBegin: Date, dateEnd: Date): Int? {
+        return executor.getAmountByDate(dateBegin, dateEnd)
+    }
+
+    fun getAllFilms(): List<Film> {
+        return executor.getAllFilms()
+    }
+
 }
