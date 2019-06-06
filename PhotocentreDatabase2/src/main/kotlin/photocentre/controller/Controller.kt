@@ -1,5 +1,7 @@
 package photocentre.controller
 
+import photocentre.executors.Executor
+
 class Controller(private val executor: Executor) {
 
     /*fun createBranchOffice(string: String): String {

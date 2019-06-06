@@ -1,4 +1,4 @@
-package photocentre.controller
+package photocentre.main
 
 import java.sql.Connection
 import javax.sql.DataSource

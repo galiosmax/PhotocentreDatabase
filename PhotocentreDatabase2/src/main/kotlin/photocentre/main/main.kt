@@ -1,4 +1,4 @@
-package photocentre.controller
+package photocentre.main
 
 class Main {
 
@@ -16,7 +16,7 @@ class Main {
             val itemDao = ItemDao(photocentreDataSource)
             val supplierDao = SupplierDao(photocentreDataSource)
             val supplyDao = SupplyDao(photocentreDataSource)
-            val workerDao = WorkerDao(photocentreDataSource)
+            val workerDao = WorkerExecutor(photocentreDataSource)
             val professionalDao = ProfessionalDao(photocentreDataSource)
             val controller = Controller(Executor(photocentreDataSource, amateurDao, branchOfficeDao, CustomerDao, kioskDao, orderDao,
                     photoDao, serviceDao, itemDao, supplierDao, supplyDao, workerDao, professionalDao, amateurDao))

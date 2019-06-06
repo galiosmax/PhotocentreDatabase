@@ -1,4 +1,4 @@
-package photocentre.controller
+package photocentre.main
 
 import org.flywaydb.core.Flyway
 import org.postgresql.ds.PGSimpleDataSource
