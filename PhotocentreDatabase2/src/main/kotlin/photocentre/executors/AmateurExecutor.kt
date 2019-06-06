@@ -37,4 +37,10 @@ class AmateurExecutor(
             amateurDao.deleteAmateur(id)
         }
     }
+
+    fun getAllAmateurs(): List<Amateur> {
+        return transaction(dataSource) {
+            amateurDao.gelAll()
+        }
+    }
 }

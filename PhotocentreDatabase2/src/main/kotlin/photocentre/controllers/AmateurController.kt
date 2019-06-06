@@ -5,43 +5,42 @@ import photocentre.executors.AmateurExecutor
 
 class AmateurController(private val executor: AmateurExecutor) {
 
-    fun createAmateur(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (string.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
+    fun createAmateur(amateur: Amateur): Amateur {
 
-        val amateur = Amateur(null, args[0].toInt())
-        return executor.createAmateur(amateur).toString()
+        val id = executor.createAmateur(amateur)
+        return Amateur(
+                id = id,
+                experience = amateur.experience
+        )
     }
 
-    fun createAmateurs(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (string.isEmpty()) {
-            return "args expected"
-        }
+    fun createAmateurs(amateurs: List<Amateur>): List<Amateur> {
 
-        val toCreate = ArrayList<Amateur>()
+        val ids = executor.createAmateurs(amateurs)
+        val newAmateurs = ArrayList<Amateur>()
 
-        for (i in 0 until args.size) {
-            toCreate.add(Amateur(null, args[i].toInt()))
+        for (i in 1..ids.size) {
+            newAmateurs += Amateur(
+                    id = ids[i],
+                    experience = amateurs[i].experience
+            )
         }
-        return executor.createAmateurs(toCreate).toString()
+        return newAmateurs
     }
 
-    fun getAmateur(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (args.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-        return executor.findAmateur(args[0].toLong()).toString()
+    fun getAmateur(id: Long): Amateur? {
+        return executor.findAmateur(id)
     }
 
-    fun deleteAmateur(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (args.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-        return executor.deleteAmateur(args[0].toLong()).toString()
+    fun updateAmateur(amateur: Amateur): String {
+        return executor.updateAmateur(amateur).toString()
+    }
+
+    fun deleteAmateur(id: Long): String {
+        return executor.deleteAmateur(id).toString()
+    }
+
+    fun getAll():List<Amateur> {
+        return executor.getAllAmateurs()
     }
 }
