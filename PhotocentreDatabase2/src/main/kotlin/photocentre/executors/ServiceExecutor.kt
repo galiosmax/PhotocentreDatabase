@@ -37,4 +37,10 @@ class ServiceExecutor(
             serviceDao.deleteService(id)
         }
     }
+
+    fun getAllServices(): List<Service> {
+        return transaction(dataSource) {
+            serviceDao.gelAll()
+        }
+    }
 }
