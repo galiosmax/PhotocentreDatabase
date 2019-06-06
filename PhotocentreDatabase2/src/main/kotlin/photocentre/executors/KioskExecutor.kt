@@ -1,6 +1,7 @@
 package photocentre.executors
 
 import photocentre.dao.KioskDao
+import photocentre.dataClasses.BranchOffice
 import photocentre.dataClasses.Kiosk
 import photocentre.main.PhotocentreDataSource
 
@@ -37,4 +38,17 @@ class KioskExecutor(
             kioskDao.deleteKiosk(id)
         }
     }
+
+    fun countKiosks(): Int? {
+        return transaction(dataSource) {
+            kioskDao.countKiosks()
+        }
+    }
+
+    fun getAllKiosks(): List<Kiosk> {
+        return transaction(dataSource) {
+            kioskDao.gelAll()
+        }
+    }
+
 }

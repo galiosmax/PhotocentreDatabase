@@ -5,43 +5,47 @@ import photocentre.executors.KioskExecutor
 
 class KioskController(private val executor: KioskExecutor) {
 
-    fun createKiosk(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (string.isEmpty() || args.size != 2) {
-            return "2 args expected"
-        }
-
-        val kiosk = Kiosk(null, args[0], args[1].toInt())
-        return executor.createKiosk(kiosk).toString()
+    fun createKiosk(kiosk: Kiosk): Kiosk {
+        val id = executor.createKiosk(kiosk)
+        return Kiosk(
+                id = id,
+                address = kiosk.address,
+                branchOffice = kiosk.branchOffice
+        )
     }
 
-    fun createKiosks(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (string.isEmpty() || args.size % 2 != 0) {
-            return "even args expected"
-        }
+    fun createKiosks(kiosks: List<Kiosk>): List<Kiosk> {
+        val ids = executor.createKiosks(kiosks)
+        val newKiosks = ArrayList<Kiosk>()
 
-        val toCreate = ArrayList<Kiosk>()
-
-        for (i in 0 until args.size step 2) {
-            toCreate.add(Kiosk(null, args[i], args[i + 1].toInt()))
+        for (i in 1..ids.size) {
+            newKiosks += Kiosk(
+                    id = ids[i],
+                    address = kiosks[i].address,
+                    branchOffice = kiosks[i].branchOffice
+            )
         }
-        return executor.createKiosks(toCreate).toString()
+        return newKiosks
     }
 
-    fun getKiosk(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (args.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-        return executor.findKiosk(args[0].toLong()).toString()
+    fun getKiosk(id: Long): String {
+        return executor.findKiosk(id).toString()
     }
 
-    fun deleteKiosk(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (args.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-        return executor.deleteKiosk(args[0].toLong()).toString()
+    fun updateKiosk(kiosk: Kiosk): String {
+        return executor.updateKiosk(kiosk).toString()
     }
+
+    fun deleteKiosk(id: Long): String {
+        return executor.deleteKiosk(id).toString()
+    }
+
+    fun countKiosks(): Int? {
+        return executor.countKiosks()
+    }
+
+    fun getAllKiosks(): List<Kiosk> {
+        return executor.getAllKiosks()
+    }
+
 }
