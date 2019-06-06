@@ -1,10 +1,8 @@
 package photocentre.dao
 
 import photocentre.dataClasses.Amateur
-import photocentre.dataClasses.BranchOffice
 import java.sql.Statement
 import javax.sql.DataSource
-import kotlin.math.absoluteValue
 
 class AmateurDao(private val dataSource: DataSource) {
 

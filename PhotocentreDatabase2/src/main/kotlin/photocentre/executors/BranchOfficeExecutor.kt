@@ -1,7 +1,8 @@
 package photocentre.executors
 
-import photocentre.dao.*
+import photocentre.dao.BranchOfficeDao
 import photocentre.dataClasses.BranchOffice
+import photocentre.dataClasses.Kiosk
 import photocentre.main.PhotocentreDataSource
 
 class BranchOfficeExecutor(
@@ -35,6 +36,24 @@ class BranchOfficeExecutor(
     fun deleteBranchOffice(id: Long) {
         return transaction(dataSource) {
             branchOfficeDao.deleteBranchOffice(id)
+        }
+    }
+
+    fun countBranchOffices(): Int {
+        return transaction(dataSource) {
+            branchOfficeDao.countBranchOffices()
+        }
+    }
+
+    fun getAllBranchOffices(): List<BranchOffice> {
+        return transaction(dataSource) {
+            branchOfficeDao.gelAll()
+        }
+    }
+
+    fun getBranchOfficesAndKiosks(): List<Pair<BranchOffice, Kiosk>> {
+        return transaction(dataSource) {
+            branchOfficeDao.selectBranchOfficesAndKiosks()
         }
     }
 }

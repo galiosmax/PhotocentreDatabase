@@ -13,7 +13,7 @@ class BranchOfficeDao(private val dataSource: DataSource) {
                 Statement.RETURN_GENERATED_KEYS
         )
         statement.setString(1, branchOffice.address)
-        statement.setInt(2, branchOffice.amountOfWorkers!!)
+        statement.setInt(2, branchOffice.amountOfWorkers)
         statement.executeUpdate()
         val generated = statement.generatedKeys
         generated.next()
@@ -28,7 +28,7 @@ class BranchOfficeDao(private val dataSource: DataSource) {
 
         for (branchOffice in toCreate) {
             statement.setString(1, branchOffice.address)
-            statement.setInt(2, branchOffice.amountOfWorkers!!)
+            statement.setInt(2, branchOffice.amountOfWorkers)
             statement.addBatch()
         }
 
@@ -64,7 +64,7 @@ class BranchOfficeDao(private val dataSource: DataSource) {
                 "update branch_offices set branch_office_address = ?, branch_office_amount_of_workers = ? where branch_office_id = ?"
         )
         statement.setString(1, branchOffice.address)
-        statement.setInt(2, branchOffice.amountOfWorkers!!)
+        statement.setInt(2, branchOffice.amountOfWorkers)
         statement.setLong(3, branchOffice.id!!)
         statement.executeUpdate()
     }

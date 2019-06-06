@@ -1,47 +1,55 @@
 package photocentre.controllers
 
 import photocentre.dataClasses.BranchOffice
+import photocentre.dataClasses.Kiosk
 import photocentre.executors.BranchOfficeExecutor
 
 class BranchOfficeController(private val executor: BranchOfficeExecutor) {
 
-    fun createBranchOffice(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (string.isEmpty() || args.size != 2) {
-            return "2 args expected"
-        }
-
-        val branchOffice = BranchOffice(null, args[0], args[1].toInt())
-        return executor.createBranchOffice(branchOffice).toString()
+    fun createBranchOffice(branchOffice: BranchOffice): BranchOffice {
+        val id = executor.createBranchOffice(branchOffice)
+        return BranchOffice(
+                id = id, 
+                address = branchOffice.address, 
+                amountOfWorkers = branchOffice.amountOfWorkers
+        )
     }
 
-    fun createBranchOffices(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (string.isEmpty() || args.size % 2 != 0) {
-            return "even args expected"
-        }
+    fun createBranchOffices(branchOffices: List<BranchOffice>): List<BranchOffice> {
+        val ids = executor.createBranchOffices(branchOffices)
+        val newBranchOffices = ArrayList<BranchOffice>()
 
-        val toCreate = ArrayList<BranchOffice>()
-
-        for (i in 0 until args.size step 2) {
-            toCreate.add(BranchOffice(null, args[i], args[i + 1].toInt()))
+        for (i in 1..ids.size) {
+            newBranchOffices += BranchOffice(
+                    id = ids[i],
+                    address = branchOffices[i].address,
+                    amountOfWorkers = branchOffices[i].amountOfWorkers
+            )
         }
-        return executor.createBranchOffices(toCreate).toString()
+        return newBranchOffices
     }
 
-    fun getBranchOffice(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (args.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-        return executor.findBranchOffice(args[0].toLong()).toString()
+    fun getBranchOffice(id: Long): BranchOffice? {
+        return executor.findBranchOffice(id)
     }
 
-    fun deleteBranchOffice(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (args.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-        return executor.deleteBranchOffice(args[0].toLong()).toString()
+    fun updateBranchOffice(branchOffice: BranchOffice): String {
+        return executor.updateBranchOffice(branchOffice).toString()
+    }
+
+    fun deleteBranchOffice(id: Long): String {
+        return executor.deleteBranchOffice(id).toString()
+    }
+
+    fun countBranchOffices(): Int {
+        return executor.countBranchOffices()
+    }
+
+    fun getAllBranchOffices(): List<BranchOffice> {
+        return executor.getAllBranchOffices()
+    }
+
+    fun getBranchOfficesAndKiosks(): List<Pair<BranchOffice, Kiosk>> {
+        return executor.getBranchOfficesAndKiosks()
     }
 }
