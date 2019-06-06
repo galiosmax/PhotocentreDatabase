@@ -5,43 +5,54 @@ import photocentre.executors.OfficeItemExecutor
 
 class OfficeItemController(private val executor: OfficeItemExecutor) {
 
-    fun createItem(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (string.isEmpty() || args.size != 4) {
-            return "4 args expected"
-        }
-
-        val item = OfficeItem(null, args[0], args[1].toFloat(), Date.valueOf(args[2]), args[3])
-        return executor.createOfficeItem(item).toString()
+    fun createItem(item: OfficeItem): OfficeItem {
+        val id = executor.createOfficeItem(item)
+        return OfficeItem(
+                id = id,
+                forSale = item.forSale,
+                amount = item.amount,
+                recommendedAmount = item.recommendedAmount,
+                criticalAmount = item.criticalAmount,
+                name = item.name,
+                cost = item.cost,
+                type = item.type,
+                branchOffice = item.branchOffice
+        )
     }
 
-    fun createItems(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (string.isEmpty() || args.size % 4 != 0) {
-            return "args mod 4 expected"
-        }
+    fun createItems(items: List<OfficeItem>): List<OfficeItem> {
+        val ids = executor.createOfficeItems(items)
+        val newOfficeItems = ArrayList<OfficeItem>()
 
-        val toCreate = ArrayList<OfficeItem>()
-
-        for (i in 0 until args.size step 4) {
-            toCreate.add(OfficeItem(null, args[i], args[i + 1].toFloat(), Date.valueOf(args[i + 2]), args[i + 3]))
+        for (i in 1..ids.size) {
+            newOfficeItems += OfficeItem(
+                    id = ids[i],
+                    forSale = items[i].forSale,
+                    amount = items[i].amount,
+                    recommendedAmount = items[i].recommendedAmount,
+                    criticalAmount = items[i].criticalAmount,
+                    name = items[i].name,
+                    cost = items[i].cost,
+                    type = items[i].type,
+                    branchOffice = items[i].branchOffice
+            )
         }
-        return executor.createOfficeItems(toCreate).toString()
+        return newOfficeItems
     }
 
-    fun getItem(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (args.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-        return executor.findOfficeItem(args[0].toLong()).toString()
+    fun getItem(id: Long): String {
+        return executor.findOfficeItem(id).toString()
+    }
+    
+    fun updateItem(item: OfficeItem): String {
+        return executor.updateOfficeItem(item).toString()
+    }
+ 
+    fun deleteItem(id: Long): String {
+        return executor.deleteOfficeItem(id).toString()
     }
 
-    fun deleteItem(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (args.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-        return executor.deleteOfficeItem(args[0].toLong()).toString()
+    fun getAllOfficeItems(): List<OfficeItem> {
+        return executor.getAllOfficeItems()
     }
 }

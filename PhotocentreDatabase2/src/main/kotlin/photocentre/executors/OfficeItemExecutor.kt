@@ -37,4 +37,10 @@ class OfficeItemExecutor(
             officeItemDao.deleteOfficeItem(id)
         }
     }
+
+    fun getAllOfficeItems(): List<OfficeItem> {
+        return transaction(dataSource) {
+            officeItemDao.gelAll()
+        }
+    }
 }

@@ -1,6 +1,5 @@
 package photocentre.dao
 
-import photocentre.dataClasses.Kiosk
 import photocentre.dataClasses.OfficeItem
 import photocentre.enums.ItemType
 import java.sql.Statement
