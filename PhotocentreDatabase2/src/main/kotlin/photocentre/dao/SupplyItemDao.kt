@@ -1,6 +1,5 @@
 package photocentre.dao
 
-import photocentre.dataClasses.Supply
 import photocentre.dataClasses.SupplyItem
 import photocentre.enums.ItemType
 import java.sql.Statement

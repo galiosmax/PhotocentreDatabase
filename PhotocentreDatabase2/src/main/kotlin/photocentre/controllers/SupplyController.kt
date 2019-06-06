@@ -43,7 +43,7 @@ class SupplyController(private val executor: SupplyExecutor) {
     fun deleteSupply(id: Long): String {
         return executor.deleteSupply(id).toString()
     }
-    
+
     fun getAllSupplies(): List<Supply> {
         return executor.getAllSupplies()
     }

@@ -2,47 +2,52 @@ package photocentre.controllers
 
 import photocentre.dataClasses.SupplyItem
 import photocentre.executors.SupplyItemExecutor
-import java.sql.Date
 
 class SupplyItemController(private val executor: SupplyItemExecutor) {
 
-    fun createItem(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (string.isEmpty() || args.size != 4) {
-            return "4 args expected"
-        }
+    fun createSupplyItem(supplyItem: SupplyItem): SupplyItem {
 
-        val item = SupplyItem(null, args[0], args[1].toFloat(), Date.valueOf(args[2]), args[3])
-        return executor.createSupplyItem(item).toString()
+        val id = executor.createSupplyItem(supplyItem)
+        return SupplyItem(
+                id = id,
+                name = supplyItem.name,
+                amount = supplyItem.amount,
+                type = supplyItem.type,
+                supply = supplyItem.supply
+        )
     }
 
-    fun createItems(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (string.isEmpty() || args.size % 4 != 0) {
-            return "args mod 4 expected"
-        }
+    fun createSupplyItems(supplyItems: List<SupplyItem>): List<SupplyItem> {
 
-        val toCreate = ArrayList<SupplyItem>()
+        val ids = executor.createSupplyItems(supplyItems)
+        val newSupplyItems = ArrayList<SupplyItem>()
 
-        for (i in 0 until args.size step 4) {
-            toCreate.add(SupplyItem(null, args[i], args[i + 1].toFloat(), Date.valueOf(args[i + 2]), args[i + 3]))
+        for (i in 1..ids.size) {
+            newSupplyItems += SupplyItem(
+                    id = ids[i],
+                    name = supplyItems[i].name,
+                    amount = supplyItems[i].amount,
+                    type = supplyItems[i].type,
+                    supply = supplyItems[i].supply
+            )
         }
-        return executor.createSupplyItems(toCreate).toString()
+        return newSupplyItems
     }
 
-    fun getItem(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (args.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-        return executor.findSupplyItem(args[0].toLong()).toString()
+    fun getSupplyItem(id: Long): SupplyItem? {
+        return executor.findSupplyItem(id)
     }
 
-    fun deleteItem(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (args.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-        return executor.deleteSupplyItem(args[0].toLong()).toString()
+    fun updateSupplyItem(supplyItem: SupplyItem): String {
+        return executor.updateSupplyItem(supplyItem).toString()
     }
+
+    fun deleteSupplyItem(id: Long): String {
+        return executor.deleteSupplyItem(id).toString()
+    }
+
+    fun getAllSupplyItems():List<SupplyItem> {
+        return executor.getAllSupplyItems()
+    }
+    
 }

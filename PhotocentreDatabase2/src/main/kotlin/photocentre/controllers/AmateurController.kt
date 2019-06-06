@@ -40,7 +40,7 @@ class AmateurController(private val executor: AmateurExecutor) {
         return executor.deleteAmateur(id).toString()
     }
 
-    fun getAll():List<Amateur> {
+    fun getAllAmateurs():List<Amateur> {
         return executor.getAllAmateurs()
     }
 }
