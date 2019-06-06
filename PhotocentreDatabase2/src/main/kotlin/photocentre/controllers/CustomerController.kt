@@ -1,47 +1,64 @@
 package photocentre.controllers
 
+import photocentre.dataClasses.BranchOffice
 import photocentre.dataClasses.Customer
 import photocentre.executors.CustomerExecutor
 
 class CustomerController(private val executor: CustomerExecutor) {
 
-    fun createCustomer(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (string.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
+    fun createCustomer(customer: Customer): Customer {
 
-        val customer = Customer(null, args[0].toInt())
-        return executor.createCustomer(customer).toString()
+        val id = executor.createCustomer(customer)
+        return Customer(
+                id = id,
+                name = customer.name,
+                discount = customer.discount,
+                professional = customer.professional,
+                amateur = customer.amateur
+        )
     }
 
-    fun createCustomers(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (string.isEmpty()) {
-            return "args expected"
-        }
+    fun createCustomers(customers: List<Customer>): List<Customer> {
+        val ids = executor.createCustomers(customers)
+        val newCustomers = ArrayList<Customer>()
 
-        val toCreate = ArrayList<Customer>()
-
-        for (i in 0 until args.size) {
-            toCreate.add(Customer(null, args[i].toInt()))
+        for (i in 1..ids.size) {
+            newCustomers += Customer(
+                    id = ids[i],
+                    name = customers[i].name,
+                    discount = customers[i].discount,
+                    professional = customers[i].professional,
+                    amateur = customers[i].amateur
+            )
         }
-        return executor.createCustomers(toCreate).toString()
+        return newCustomers
     }
 
-    fun getCustomer(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (args.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-        return executor.findCustomer(args[0].toLong()).toString()
+    fun getCustomer(id: Long): Customer? {
+        return executor.findCustomer(id)
     }
 
-    fun deleteCustomer(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (args.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-        return executor.deleteCustomer(args[0].toLong()).toString()
+    fun updateCustomer(customer: Customer): String {
+        return executor.updateCustomer(customer).toString()
+    }
+
+    fun deleteCustomer(id: Long): String {
+        return executor.deleteCustomer(id).toString()
+    }
+
+    fun getCustomersByOffice(branchOffice: BranchOffice): List<Customer> {
+        return executor.getCustomersByOffice(branchOffice)
+    }
+
+    fun getIfDiscount(): List<Customer> {
+        return executor.getIfDiscount()
+    }
+
+    fun getByAmount(photoAmount: Int): List<Pair<Customer, Int>> {
+        return executor.getByAmount(photoAmount)
+    }
+
+    fun getAllCustomers(): List<Customer> {
+        return executor.getAllCustomers()
     }
 }

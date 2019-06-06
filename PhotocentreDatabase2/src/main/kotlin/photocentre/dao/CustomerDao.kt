@@ -1,7 +1,5 @@
 package photocentre.dao
 
-import com.sun.org.apache.xml.internal.dtm.ref.CustomStringPool
-import photocentre.dataClasses.Amateur
 import photocentre.dataClasses.BranchOffice
 import photocentre.dataClasses.Customer
 import photocentre.dataClasses.Professional
@@ -177,8 +175,7 @@ class CustomerDao(private val dataSource: DataSource) {
         return res
     }
 
-
-    fun getByVolume(volume: Int): List<Pair<Customer, Int>> {
+    fun getByAmount(amount: Int): List<Pair<Customer, Int>> {
         val statement = dataSource.connection.prepareStatement(
                 "select customers.customer_name, count(photo_id) as photo_amount " +
                         "from orders " +
@@ -192,7 +189,7 @@ class CustomerDao(private val dataSource: DataSource) {
                         "having count(photo_id) >= ? " +
                         "order by photo_amount desc"
         )
-        statement.setInt(1, volume)
+        statement.setInt(1, amount)
         val resultSet = statement.executeQuery()
         val res = ArrayList<Pair<Customer, Int>>()
 
