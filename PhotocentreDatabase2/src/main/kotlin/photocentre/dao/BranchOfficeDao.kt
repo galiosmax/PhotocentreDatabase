@@ -92,12 +92,17 @@ class BranchOfficeDao(private val dataSource: DataSource) {
         statement.executeUpdate()
     }
 
-    fun countBranchOffices(): Int {
+    fun countBranchOffices(): Int? {
         val statement = dataSource.connection.prepareStatement(
                 "select count(*) as Total_Offices from branch_offices"
         )
         val resultSet = statement.executeQuery()
-        return resultSet.getInt("Total_Offices")
+
+        return if(resultSet.next()) {
+            resultSet.getInt("Total_Offices")
+        } else {
+            null
+        }
     }
 
     fun getAllBranchOffices(): ArrayList<BranchOffice> {

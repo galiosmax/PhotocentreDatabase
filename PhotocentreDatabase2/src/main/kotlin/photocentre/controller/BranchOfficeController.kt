@@ -1,9 +1,7 @@
 package photocentre.controller
 
 import javafx.collections.FXCollections
-import javafx.collections.ObservableList
 import photocentre.dataClasses.BranchOffice
-import javax.naming.ldap.Control
 
 //
 import tornadofx.*
@@ -24,6 +22,10 @@ class BranchOfficeController(val executor: Executor) : Controller() {
     fun createBranchOffice(address: String, amnt: Int): Long {
         val branchOffice = BranchOffice(-1, address, amnt)
         return executor.createBranchOffice(branchOffice)
+    }
+
+    fun countBranchOffices(): Int {
+        return executor.countBranchOffices() ?: 0
     }
 
 //    fun createBranchOffices(string: String): String {

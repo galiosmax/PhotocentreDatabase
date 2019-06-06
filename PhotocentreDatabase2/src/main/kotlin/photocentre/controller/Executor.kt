@@ -33,6 +33,12 @@ class Executor(private val dataSource: PhotocentreDataSource,
         }
     }
 
+    fun countBranchOffices(): Int? {
+        return transaction(dataSource) {
+            branchOfficeDao.countBranchOffices()
+        }
+    }
+
 //    fun createBranchOffices(toCreate: Iterable<BranchOffice>): List<Long> {
 //        return transaction(dataSource) {
 //            branchOfficeDao.createBranchOffices(toCreate)

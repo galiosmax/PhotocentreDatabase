@@ -33,6 +33,12 @@ class BranchOfficeCRUDFragment(photocentreDataSource: PhotocentreDataSource) : F
 
                 }
             }
+            button("countBranchOffices") {
+                action {
+                    val countOfficeFragment = BranchOfficeSelectCountOfficeFragment(photocentreDataSource)
+                    replaceWith(countOfficeFragment)
+                }
+            }
         }
     }
 }
