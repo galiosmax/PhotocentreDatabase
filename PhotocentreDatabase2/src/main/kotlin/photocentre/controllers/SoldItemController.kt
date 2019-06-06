@@ -1,48 +1,69 @@
 package photocentre.controllers
 
+import photocentre.dataClasses.BranchOffice
 import photocentre.dataClasses.SoldItem
 import photocentre.executors.SoldItemExecutor
 import java.sql.Date
 
 class SoldItemController(private val executor: SoldItemExecutor) {
 
-    fun createItem(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (string.isEmpty() || args.size != 4) {
-            return "4 args expected"
-        }
-
-        val item = SoldItem(null, args[0], args[1].toFloat(), Date.valueOf(args[2]), args[3])
-        return executor.createSoldItem(item).toString()
+    fun createItem(soldItem: SoldItem): SoldItem {
+        val id = executor.createSoldItem(soldItem)
+        return SoldItem(
+                id = id,
+                name = soldItem.name,
+                cost = soldItem.cost,
+                date = soldItem.date,
+                branchOffice = soldItem.branchOffice
+        )
     }
 
-    fun createItems(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (string.isEmpty() || args.size % 4 != 0) {
-            return "args mod 4 expected"
-        }
+    fun createItems(soldItems: List<SoldItem>): List<SoldItem> {
+        val ids = executor.createSoldItems(soldItems)
+        val newSoldItems = ArrayList<SoldItem>()
 
-        val toCreate = ArrayList<Item>()
-
-        for (i in 0 until args.size step 4) {
-            toCreate.add(SoldItem(null, args[i], args[i + 1].toFloat(), Date.valueOf(args[i + 2]), args[i + 3]))
+        for (i in 1..ids.size) {
+            newSoldItems += SoldItem(
+                    id = ids[i],
+                    name = soldItems[i].name,
+                    cost = soldItems[i].cost,
+                    date = soldItems[i].date,
+                    branchOffice = soldItems[i].branchOffice
+            )
         }
-        return executor.createSoldItems(toCreate).toString()
+        return newSoldItems
     }
 
-    fun getItem(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (args.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-        return executor.findSoldItem(args[0].toLong()).toString()
+    fun getItem(id: Long): SoldItem? {
+        return executor.findSoldItem(id)
     }
 
-    fun deleteItem(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (args.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-        return executor.deleteSoldItem(args[0].toLong()).toString()
+    fun updateItem(soldItem: SoldItem): String {
+        return executor.updateSoldItem(soldItem).toString()
     }
+
+    fun deleteItem(id: Long): String {
+        return executor.deleteSoldItem(id).toString()
+    }
+
+    fun getRevenueByBranchOffice(branchOffice: BranchOffice, dateBegin: Date, dateEnd: Date): Float? {
+        return executor.getRevenueByBranchOffice(branchOffice, dateBegin, dateEnd)
+    }
+
+    fun getRevenueByDate(dateBegin: Date, dateEnd: Date): Float? {
+        return executor.getRevenueByDate(dateBegin, dateEnd)
+    }
+
+    fun countByBranchOffice(branchOffice: BranchOffice, dateBegin: Date, dateEnd: Date): List<Pair<SoldItem, Int>> {
+        return executor.countByBranchOffice(branchOffice, dateBegin, dateEnd)
+    }
+
+    fun countByDate(dateBegin: Date, dateEnd: Date): List<Pair<SoldItem, Int>> {
+        return executor.countByDate(dateBegin, dateEnd)
+    }
+
+    fun getAllSoldItems(): List<SoldItem> {
+        return executor.getAllSoldItems()
+    }
+
 }

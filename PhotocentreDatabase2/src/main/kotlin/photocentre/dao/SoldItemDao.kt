@@ -1,7 +1,6 @@
 package photocentre.dao
 
 import photocentre.dataClasses.BranchOffice
-import photocentre.dataClasses.Service
 import photocentre.dataClasses.SoldItem
 import java.sql.Date
 import java.sql.Statement
@@ -108,7 +107,7 @@ class SoldItemDao(private val dataSource: DataSource) {
         statement.executeUpdate()
     }
 
-    fun getRevenuebyBrnchOffice(branchOffice: BranchOffice, dateBegin: Date, dateEnd: Date): Float? {
+    fun getRevenueByBranchOffice(branchOffice: BranchOffice, dateBegin: Date, dateEnd: Date): Float? {
         val statement = dataSource.connection.prepareStatement(
                 "select sum(sold_item_cost) as total_amount" +
                         "from sold_items " +
@@ -129,7 +128,7 @@ class SoldItemDao(private val dataSource: DataSource) {
         }
     }
 
-    fun getRevenuebyDate(dateBegin: Date, dateEnd: Date): Float? {
+    fun getRevenueByDate(dateBegin: Date, dateEnd: Date): Float? {
         val statement = dataSource.connection.prepareStatement(
                 "select sum(sold_item_cost) as total_amount" +
                         "from sold_items " +
@@ -148,7 +147,7 @@ class SoldItemDao(private val dataSource: DataSource) {
         }
     }
 
-    fun countbyBranchOffice(branchOffice: BranchOffice, dateBegin: Date, dateEnd: Date): List<Pair<SoldItem, Int>> {
+    fun countByBranchOffice(branchOffice: BranchOffice, dateBegin: Date, dateEnd: Date): List<Pair<SoldItem, Int>> {
         val statement = dataSource.connection.prepareStatement(
                 "select sold_item_name, count(*) as total_amount" +
                         "from sold_items " +
@@ -175,7 +174,7 @@ class SoldItemDao(private val dataSource: DataSource) {
         return res
     }
 
-    fun countbyDate(dateBegin: Date, dateEnd: Date): List<Pair<SoldItem, Int>> {
+    fun countByDate(dateBegin: Date, dateEnd: Date): List<Pair<SoldItem, Int>> {
         val statement = dataSource.connection.prepareStatement(
                 "select sold_item_name, count(*) as total_amount" +
                         "from sold_items " +
