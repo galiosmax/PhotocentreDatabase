@@ -364,17 +364,19 @@ order by photo_amnt desc;
 --некоторого периода времени.
 
 --В целом
-select sum(sold_item_cost) 
+--getRevenuebyDate() from SoldItemDao
+/*select sum(sold_item_cost) 
 from sold_items
 where sold_item_date between (SELECT MIN(sold_item_date) FROM sold_items) and to_date('2019-02-28','YYYY-MM-dd');
 
 
 --По филиалу
+--getRevenuebyBrnchOffice() from SoldItemDao
 select sum(sold_item_cost) 
 from sold_items
 where branch_office_id = 1
 and sold_item_date between (SELECT MIN(sold_item_date) FROM sold_items) and to_date('2019-02-28','YYYY-MM-dd');
-
+*/
 
 --10
 --Получить перечень фототоваров и фирм, их производящих, которые
@@ -414,18 +416,20 @@ order by summ desc;
 --проданных в течение некоторого периода времени.
 
 --В целом
-select sold_item_name, count(*) 
+--countbyDate() from SoldItemDao
+/*select sold_item_name, count(*) 
 from sold_items
 where sold_item_date between (SELECT MIN(sold_item_date) FROM sold_items) and to_date('2019-02-28','YYYY-MM-dd')
 group by sold_item_name;
 
 
 --По филиалу
+--countbyBranchOffice() from SoldItemDao
 select sold_item_name, count(*) 
 from sold_items
 where sold_item_date between (SELECT MIN(sold_item_date) FROM sold_items) and to_date('2019-02-28','YYYY-MM-dd')
 and branch_office_id = 1
-group by sold_item_name;
+group by sold_item_name;*/
 
 
 --12
