@@ -3,7 +3,6 @@ package photocentre.dao
 import photocentre.dataClasses.BranchOffice
 import photocentre.dataClasses.Supplier
 import photocentre.enums.ItemType
-import photocentre.enums.PaperType
 import java.sql.Date
 import java.sql.Statement
 import javax.sql.DataSource
