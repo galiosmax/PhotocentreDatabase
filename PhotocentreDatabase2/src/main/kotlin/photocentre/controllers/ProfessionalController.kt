@@ -5,43 +5,43 @@ import photocentre.executors.ProfessionalExecutor
 
 class ProfessionalController(private val executor: ProfessionalExecutor) {
 
-    fun createProfessional(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (string.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-
-        val professional = Professional(null, args[0].toInt())
-        return executor.createProfessional(professional).toString()
+    fun createProfessional(professional: Professional): Professional {
+        val id = executor.createProfessional(professional)
+        return Professional(
+                id = id,
+                discount = professional.discount,
+                branchOffice = professional.branchOffice
+        )
     }
 
-    fun createProfessionals(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (string.isEmpty()) {
-            return "args expected"
-        }
+    fun createProfessionals(professionals: List<Professional>): List<Professional> {
+        val ids = executor.createProfessionals(professionals)
+        val newProfessionals = ArrayList<Professional>()
 
-        val toCreate = ArrayList<Professional>()
-
-        for (i in 0 until args.size) {
-            toCreate.add(Professional(null, args[i].toInt()))
+        for (i in 1..ids.size) {
+            newProfessionals += Professional(
+                    id = ids[i],
+                    discount = professionals[i].discount,
+                    branchOffice = professionals[i].branchOffice
+            )
         }
-        return executor.createProfessionals(toCreate).toString()
+        return newProfessionals
     }
 
-    fun getProfessional(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (args.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-        return executor.findProfessional(args[0].toLong()).toString()
+    fun getProfessional(id: Long): Professional? {
+        return executor.findProfessional(id)
     }
 
-    fun deleteProfessional(string: String): String {
-        val args = string.split(",").map { it.trim() }
-        if (args.isEmpty() || args.size != 1) {
-            return "1 arg expected"
-        }
-        return executor.deleteProfessional(args[0].toLong()).toString()
+    fun updateProfessional(professional: Professional): String {
+        return executor.updateProfessional(professional).toString()
     }
+
+    fun deleteProfessional(id: Long): String {
+        return executor.deleteProfessional(id).toString()
+    }
+
+    fun getAllProfessionals(): List<Professional> {
+        return executor.getAllProfessionals()
+    }
+
 }

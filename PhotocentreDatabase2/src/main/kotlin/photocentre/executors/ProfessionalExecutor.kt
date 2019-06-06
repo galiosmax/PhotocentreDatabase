@@ -37,4 +37,10 @@ class ProfessionalExecutor(
             professionalDao.deleteProfessional(id)
         }
     }
+
+    fun getAllProfessionals(): List<Professional> {
+        return transaction(dataSource) {
+            professionalDao.gelAll()
+        }
+    }
 }
