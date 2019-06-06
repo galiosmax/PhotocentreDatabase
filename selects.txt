@@ -45,58 +45,64 @@ order by office_id, kiosk_id;
 --поступивших в течение некоторого периода времени.
 
 --По филиалам
-select orders.branch_office_id,
-orders.order_id,
-branch_offices.branch_office_address,
-orders.order_cost,
-orders.order_date,
-customers.customer_name,
-orders.order_urgency
+--getByBranchOffice() from OrderDao
+select orders.branch_office_id as office_id,
+orders.order_id as order_id,
+branch_offices.branch_office_address as address,
+orders.order_cost as cost,
+orders.order_date as order_date,
+customers.customer_name as name,
+orders.order_urgent as urgent,
+orders.order_type as type 
 from orders
 left join branch_offices 
 on orders.branch_office_id = branch_offices.branch_office_id
-left join kiosks 
-on orders.kiosk_id = kiosks.kiosk_id 
 join customers 
 on orders.customer_id = customers.customer_id
-where order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-30','YYYY-MM-dd')
+where orders.branch_office_id = ? 
+and order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-30','YYYY-MM-dd')
 order by orders.branch_office_id, orders.order_id, orders.order_cost, orders.order_urgency;
 
 
 --По киоскам
+--getByKiosk() from OrderDao
 select orders.kiosk_id,
 orders.order_id,
-branch_offices.branch_office_address,
+kiosks.kiosk_address,
 orders.order_cost,
 orders.order_date,
 customers.customer_name,
 orders.order_urgency
 from orders
-left join branch_offices 
-on orders.branch_office_id = branch_offices.branch_office_id
 left join kiosks 
 on orders.kiosk_id = kiosks.kiosk_id 
 join customers 
 on orders.customer_id = customers.customer_id 
-where order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-30','YYYY-MM-dd')
+where orders.kiosk_id = ? and 
+order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-30','YYYY-MM-dd')
 order by orders.kiosk_id, orders.order_id, orders.order_cost, orders.order_urgency;
 
 
 --Общее количество по филиалам
-select branch_office_id, count(branch_office_id)
+--countByBranchOffice() from OrderDao
+select count(branch_office_id)
 from orders
-where order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-30','YYYY-MM-dd')
+where orders.branch_office_id = ? and
+order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-30','YYYY-MM-dd')
 group by branch_office_id;
 
 
 --Общее количество по киоскам
+--countByKiosk() from OrderDao
 select kiosk_id, count(kiosk_id)
-from ordersx
-where order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-04','YYYY-MM-dd')
+from orders
+where orders.kiosk_id = ? and
+order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-04','YYYY-MM-dd')
 group by kiosk_id;
 
 
 --В целом/В течение времени
+--getByDate() from OrderDao
 select order_id, branch_offices.branch_office_address, order_cost, order_date, customers.customer_name, order_urgency 
 from orders
 left join branch_offices 
@@ -116,6 +122,9 @@ order by order_id;
 --времени.
 
 --Вроде вообще всё собрал сюда
+--getCommonByBranchOfficeAndType()
+--getCommonByKioskAndType()
+--getUrgentByBranchOfficeAndType()
 select order_id, branch_offices.branch_office_address, order_cost, order_date, customers.customer_name, order_urgency 
 from orders 
 left join branch_offices 
@@ -128,6 +137,7 @@ where order_type in ('Both')
 and order_date between (select min(order_date) from orders) and to_date('2018-12-30','YYYY-MM-dd')
 and orders.branch_office_id = 2
 and orders.kiosk_id = 6
+and orders.ungent = false
 order by order_id;
 
 
@@ -137,14 +147,16 @@ order by order_id;
 --приема заказов, поступивших в течение некоторого периода времени.
 
 --По указанному филиалу
-select sum(case when order_urgency = 'Common' then order_cost else 0 end) as common_sum,
-sum(case when order_urgency = 'Urgent' then order_cost else 0 end) as urgent_sum
+--getRevenueByBranchOffice() from OrderDao
+select sum(case when order_urgent then 0 else order_cost end) as common_sum,
+sum(case when order_urgent then 0 else order_cost end) as urgent_sum
 from orders
 where branch_office_id = 1
 and order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12-04','YYYY-MM-dd');
 
 
 --По указанному киоску
+--getRevenueByKiosk() from OrderDao
 select sum(case when order_urgency = 'Common' then order_cost else 0 end) as common_sum,
 sum(case when order_urgency = 'Urgent' then order_cost else 0 end) as urgent_sum
 from orders
@@ -153,6 +165,7 @@ and order_date between (SELECT MIN(order_date) FROM orders) and to_date('2018-12
 
 
 --В течение периода времени
+--getRevenueByDate() from Orderdao
 select sum(case when order_urgency = 'Common' then order_cost else 0 end) as common_sum,
 sum(case when order_urgency = 'Urgent' then order_cost else 0 end) as urgent_sum
 from orders

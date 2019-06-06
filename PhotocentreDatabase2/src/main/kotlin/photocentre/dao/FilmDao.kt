@@ -112,7 +112,7 @@ class FilmDao(private val dataSource: DataSource) {
         statement.executeUpdate()
     }
 
-    fun getAmountByOffice(branchOffice: BranchOffice, dateBegin: Date, dateEnd: Date): Int {
+    fun getAmountByOffice(branchOffice: BranchOffice, dateBegin: Date, dateEnd: Date): Int? {
         val statement = dataSource.connection.prepareStatement(
                 "select count(film_id) as film_amount " +
                         "from orders " +
@@ -128,10 +128,14 @@ class FilmDao(private val dataSource: DataSource) {
 
         val resultSet = statement.executeQuery()
 
-        return resultSet.getInt("film_amount")
+        return if(resultSet.next()) {
+            resultSet.getInt("film_amount")
+        } else {
+            null
+        }
     }
 
-    fun getAmountByKiosk(kiosk: Kiosk, dateBegin: Date, dateEnd: Date): Int {
+    fun getAmountByKiosk(kiosk: Kiosk, dateBegin: Date, dateEnd: Date): Int? {
         val statement = dataSource.connection.prepareStatement(
                 "select count(film_id) as film_amount " +
                         "from orders " +
@@ -147,10 +151,14 @@ class FilmDao(private val dataSource: DataSource) {
 
         val resultSet = statement.executeQuery()
 
-        return resultSet.getInt("film_amount")
+        return if(resultSet.next()) {
+            resultSet.getInt("film_amount")
+        } else {
+            null
+        }
     }
 
-    fun getAmountByDate(dateBegin: Date, dateEnd: Date): Int {
+    fun getAmountByDate(dateBegin: Date, dateEnd: Date): Int? {
         val statement = dataSource.connection.prepareStatement(
                 "select count(film_id) as film_amount " +
                         "from orders " +
@@ -164,6 +172,10 @@ class FilmDao(private val dataSource: DataSource) {
 
         val resultSet = statement.executeQuery()
 
-        return resultSet.getInt("film_amount")
+        return if(resultSet.next()) {
+            resultSet.getInt("film_amount")
+        } else {
+            null
+        }
     }
 }

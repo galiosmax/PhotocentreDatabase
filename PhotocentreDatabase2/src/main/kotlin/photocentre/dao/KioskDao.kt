@@ -102,12 +102,16 @@ class KioskDao(private val dataSource: DataSource) {
         statement.executeUpdate()
     }
 
-    fun countKiosks(): Int {
+    fun countKiosks(): Int? {
         val statement = dataSource.connection.prepareStatement(
                 "select count(*) as Total_Kiosks from kiosks"
         )
         val resultSet = statement.executeQuery()
-        return resultSet.getInt("Total_Kiosks")
+        return if(resultSet.next()) {
+            resultSet.getInt("Total_kiosks")
+        } else {
+            null
+        }
     }
 
     fun selectKiosks(): List<Kiosk> {
