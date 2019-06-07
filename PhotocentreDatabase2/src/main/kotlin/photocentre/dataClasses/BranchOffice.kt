@@ -22,3 +22,11 @@ class BranchOfficeModel : ItemViewModel<BranchOffice>() {
     val address = bind(BranchOffice::addressProperty)
     val amountOfWorkers = bind(BranchOffice::amountOfWorkersProperty)
 }
+
+class BranchOfficeAndKioskModel : ItemViewModel<Pair<BranchOffice, Kiosk>>() {
+    val pair = SimpleObjectProperty<ObservableList<Pair<BranchOffice, Kiosk>>>()
+    val idOffice = bind(BranchOffice::idProperty)
+    val idKiosk = bind(Kiosk::idProperty)
+    val addressOffice = bind(BranchOffice::addressProperty)
+    val addressKiosk = bind(Kiosk::addressProperty)
+}

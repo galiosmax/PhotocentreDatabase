@@ -3,6 +3,8 @@ package photocentre.view
 import javafx.scene.control.TabPane
 import photocentre.main.Db
 import photocentre.main.PhotocentreDataSource
+import photocentre.view.branchoffice.BranchOfficeCRUDFragment
+import photocentre.view.branchoffice.BranchOfficeListFragment
 import tornadofx.*
 
 class MainView : View("Photocentre Database") {

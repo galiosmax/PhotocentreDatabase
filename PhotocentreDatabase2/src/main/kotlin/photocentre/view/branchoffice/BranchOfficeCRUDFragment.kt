@@ -1,4 +1,4 @@
-package photocentre.view
+package photocentre.view.branchoffice
 
 import photocentre.controllers.BranchOfficeController
 import photocentre.executors.BranchOfficeExecutor
@@ -29,6 +29,8 @@ class BranchOfficeCRUDFragment(photocentreDataSource: PhotocentreDataSource) : F
             button("selectBranchOfficesAndKiosks") {
                 action {
                     //todo какой-то запрос связанный с киоском
+                    val selectBranchOfficeAndKiosksFragment = BranchOfficeSelectBranchOfficeAndKiosksFragment(photocentreDataSource)
+                    replaceWith(selectBranchOfficeAndKiosksFragment)
                 }
             }
             button("countBranchOffices") {

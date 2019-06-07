@@ -119,7 +119,7 @@ class FilmDao(private val dataSource: DataSource) {
                         "and orders.order_date between ? and ? " +
                         "and orders.order_type in ('Film processing', 'Both')"
         )
-        statement.setLong(1, branchOffice.id!!)
+        statement.setLong(1, branchOffice.id)
         statement.setDate(2, dateBegin)
         statement.setDate(3, dateEnd)
 
@@ -142,7 +142,7 @@ class FilmDao(private val dataSource: DataSource) {
                         "and orders.order_date between ? and ? " +
                         "and orders.order_type in ('Film processing', 'Both')"
         )
-        statement.setLong(1, kiosk.id!!)
+        statement.setLong(1, kiosk.id)
         statement.setDate(2, dateBegin)
         statement.setDate(3, dateEnd)
 

@@ -65,7 +65,7 @@ class BranchOfficeDao(private val dataSource: DataSource) {
         )
         statement.setString(1, branchOffice.address)
         statement.setInt(2, branchOffice.amountOfWorkers)
-        statement.setLong(3, branchOffice.id!!)
+        statement.setLong(3, branchOffice.id)
         statement.executeUpdate()
     }
 

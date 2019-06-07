@@ -1,4 +1,4 @@
-package photocentre.view
+package photocentre.view.branchoffice
 
 import tornadofx.*
 import photocentre.controllers.BranchOfficeController

@@ -1,4 +1,4 @@
-package photocentre.view
+package photocentre.view.branchoffice
 
 import photocentre.controllers.BranchOfficeController
 import photocentre.executors.BranchOfficeExecutor

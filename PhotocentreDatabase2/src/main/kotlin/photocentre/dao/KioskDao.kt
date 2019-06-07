@@ -17,11 +17,7 @@ class KioskDao(private val dataSource: DataSource) {
 
         statement.setString(1, kiosk.address)
         statement.setInt(2, kiosk.amountOfWorkers)
-        if (kiosk.branchOffice != null) {
-            statement.setLong(3, kiosk.branchOffice.id!!)
-        } else {
-            statement.setNull(3, BIGINT)
-        }
+        statement.setLong(3, kiosk.branchOffice.id)
 
         statement.executeUpdate()
         val generated = statement.generatedKeys
@@ -38,11 +34,7 @@ class KioskDao(private val dataSource: DataSource) {
         for (kiosk in toCreate) {
             statement.setString(1, kiosk.address)
             statement.setInt(2, kiosk.amountOfWorkers)
-            if (kiosk.branchOffice != null) {
-                statement.setLong(3, kiosk.branchOffice.id!!)
-            } else {
-                statement.setNull(3, BIGINT)
-            }
+            statement.setLong(3, kiosk.branchOffice.id)
             statement.addBatch()
         }
 
@@ -83,12 +75,8 @@ class KioskDao(private val dataSource: DataSource) {
 
         statement.setString(1, kiosk.address)
         statement.setInt(2, kiosk.amountOfWorkers)
-        if (kiosk.branchOffice != null) {
-            statement.setLong(3, kiosk.branchOffice.id!!)
-        } else {
-            statement.setNull(3, BIGINT)
-        }
-        statement.setLong(4, kiosk.id!!)
+        statement.setLong(3, kiosk.branchOffice.id)
+        statement.setLong(4, kiosk.id)
         statement.executeUpdate()
     }
 

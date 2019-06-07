@@ -24,12 +24,12 @@ class OrderDao(private val dataSource: DataSource) {
         statement.setDate(4, order.completionDate)
         statement.setString(5, order.type.toString())
         if (order.branchOffice != null) {
-            statement.setLong(6, order.branchOffice.id!!)
+            statement.setLong(6, order.branchOffice.id)
         } else {
             statement.setNull(6, BIGINT)
         }
         if (order.kiosk != null) {
-            statement.setLong(7, order.kiosk.id!!)
+            statement.setLong(7, order.kiosk.id)
         } else {
             statement.setNull(7, BIGINT)
         }
@@ -133,12 +133,12 @@ class OrderDao(private val dataSource: DataSource) {
         statement.setDate(4, order.completionDate)
         statement.setString(5, order.type.toString())
         if (order.branchOffice != null) {
-            statement.setLong(6, order.branchOffice.id!!)
+            statement.setLong(6, order.branchOffice.id)
         } else {
             statement.setNull(6, BIGINT)
         }
         if (order.kiosk != null) {
-            statement.setLong(7, order.kiosk.id!!)
+            statement.setLong(7, order.kiosk.id)
         } else {
             statement.setNull(7, BIGINT)
         }
@@ -301,7 +301,7 @@ class OrderDao(private val dataSource: DataSource) {
                         "group by kiosk_id"
         )
 
-        statement.setLong(1, kiosk.id!!)
+        statement.setLong(1, kiosk.id)
         statement.setDate(2, dateBegin)
         statement.setDate(3, dateEnd)
 

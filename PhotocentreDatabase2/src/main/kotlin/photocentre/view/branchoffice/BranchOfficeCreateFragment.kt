@@ -1,4 +1,4 @@
-package photocentre.view
+package photocentre.view.branchoffice
 
 import javafx.scene.control.TextField
 import photocentre.controllers.BranchOfficeController
