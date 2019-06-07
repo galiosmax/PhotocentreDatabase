@@ -8,6 +8,7 @@ import photocentre.dao.BranchOfficeDao
 import photocentre.dataClasses.BranchOffice
 import photocentre.dataClasses.BranchOfficeModel
 import tornadofx.*
+import java.lang.NumberFormatException
 
 class BranchOfficeCreateFragment(photocentreDataSource: PhotocentreDataSource) : Fragment() {
     val branchOfficeModel: BranchOfficeModel by inject()
@@ -31,11 +32,19 @@ class BranchOfficeCreateFragment(photocentreDataSource: PhotocentreDataSource) :
                 action {
                     //todo а почему просто вот так не сделать? Удобнее же
 
-                    branchOfficeModel.branchOffices.get().add(branchOfficeController.createBranchOffice(
-                            BranchOffice(
-                                    address = currentAddressText.text,
-                                    amountOfWorkers = currentAmountText.text.toInt()
-                            )))
+                    //ну типа валидация хыы, наверное лучше все таки там, когда ввод, но я нинаю как, потом объясни
+                    val branchOffice = try {
+                        BranchOffice(
+                                address = currentAddressText.text,
+                                amountOfWorkers = currentAmountText.text.toInt()
+                        )
+                    } catch (e: NumberFormatException) {
+                        BranchOffice(
+                                address = currentAddressText.text
+                        )
+                    }
+
+                    branchOfficeModel.branchOffices.get().add(branchOfficeController.createBranchOffice(branchOffice))
                     //branchOfficeModel.branchOffices.set(branchOfficeController.getBranchOffices().asObservable())
                     currentAddressText.text = ""
                     currentAmountText.text = ""
