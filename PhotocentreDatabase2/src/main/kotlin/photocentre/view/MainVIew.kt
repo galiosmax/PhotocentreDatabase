@@ -20,7 +20,10 @@ class MainView : View("Photocentre Database") {
             }
         }
         tab("Kiosks") {
-            add(KioskListFragment())
+            splitpane {
+                add(KioskListFragment(photocentreDataSource))
+                add(KioskCRUDFragment(photocentreDataSource))
+            }
         }
 
         //todo табы для таблиц

@@ -21,6 +21,10 @@ class Kiosk(
 
     var branchOffice: BranchOffice by property(branchOffice)
     fun branchOfficeProperty() = getProperty(Kiosk::branchOffice)
+
+    var branchOfficeAddress: String by property(branchOffice?.address)
+    fun branchOfficeAddressProperty() = getProperty(Kiosk::branchOfficeAddress)
+
 }
 
 class KioskModel : ItemViewModel<Kiosk>() {
@@ -29,4 +33,5 @@ class KioskModel : ItemViewModel<Kiosk>() {
     val address = bind(Kiosk::addressProperty)
     val amountOfWorkers = bind(Kiosk::amountOfWorkersProperty)
     val branchOffice = bind(Kiosk::branchOfficeProperty)
+    val branchOfficeAddress = bind(Kiosk::branchOfficeAddressProperty)
 }

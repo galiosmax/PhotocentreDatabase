@@ -1,7 +1,7 @@
 package photocentre.dao
 
 import photocentre.dataClasses.BranchOffice
-import photocentre.dataClasses.Professional
+//import photocentre.dataClasses.Professional
 import photocentre.dataClasses.Service
 import java.sql.Statement
 import java.sql.Types.BIGINT

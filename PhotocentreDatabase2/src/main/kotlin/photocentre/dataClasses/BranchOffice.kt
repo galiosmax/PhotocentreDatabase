@@ -6,7 +6,7 @@ import tornadofx.*
 
 class BranchOffice(id: Long = -1, address: String = "", amountOfWorkers: Int = 0) {
 
-    var id: Long by property(id)
+    public var id: Long by property(id)
     fun idProperty() = getProperty(BranchOffice::id)
 
     var address: String by property(address)
