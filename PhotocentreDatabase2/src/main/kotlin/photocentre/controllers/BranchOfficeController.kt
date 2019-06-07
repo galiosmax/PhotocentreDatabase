@@ -4,11 +4,21 @@ import javafx.collections.FXCollections
 import photocentre.dataClasses.BranchOffice
 import photocentre.dataClasses.Kiosk
 import photocentre.executors.BranchOfficeExecutor
+import kotlin.math.max
 
 class BranchOfficeController(private val executor: BranchOfficeExecutor) {
     //todo переделать другие контроллеры в таком стиле
-    fun createBranchOffice(branchOffice: BranchOffice): Long {
-        return executor.createBranchOffice(branchOffice)
+    //todo тут лучше валидацию делать наверн
+    fun createBranchOffice(branchOffice: BranchOffice): BranchOffice {
+
+        branchOffice.amountOfWorkers = max(0, branchOffice.amountOfWorkers)
+        val id = executor.createBranchOffice(branchOffice)
+
+        return BranchOffice(
+                id = id,
+                address = branchOffice.address,
+                amountOfWorkers = branchOffice.amountOfWorkers
+        )
     }
 //    fun createBranchOffice(address: String, amount: Int): Long {
 //        val branchOffice = BranchOffice(-1, address, amount)

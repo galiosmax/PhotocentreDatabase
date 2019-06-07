@@ -18,6 +18,7 @@ class BranchOfficeCreateFragment(photocentreDataSource: PhotocentreDataSource) :
     override val root = form {
         fieldset("Create Branch Office") {
             //todo можно валидацию сюда добавить
+            //todo валидация должна быть в контроллерах по идее
             field("Address") {
                 currentAddressText = textfield()
             }
@@ -29,12 +30,13 @@ class BranchOfficeCreateFragment(photocentreDataSource: PhotocentreDataSource) :
             button("Save") {
                 action {
                     //todo а почему просто вот так не сделать? Удобнее же
-                    branchOfficeController.createBranchOffice(
+
+                    branchOfficeModel.branchOffices.get().add(branchOfficeController.createBranchOffice(
                             BranchOffice(
                                     address = currentAddressText.text,
                                     amountOfWorkers = currentAmountText.text.toInt()
-                            ))
-                    branchOfficeModel.branchOffices.set(branchOfficeController.getBranchOffices().asObservable())
+                            )))
+                    //branchOfficeModel.branchOffices.set(branchOfficeController.getBranchOffices().asObservable())
                     currentAddressText.text = ""
                     currentAmountText.text = ""
                 }
