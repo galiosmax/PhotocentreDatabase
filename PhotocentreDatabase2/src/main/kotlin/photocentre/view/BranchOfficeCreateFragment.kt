@@ -5,6 +5,7 @@ import photocentre.controllers.BranchOfficeController
 import photocentre.executors.BranchOfficeExecutor
 import photocentre.main.PhotocentreDataSource
 import photocentre.dao.BranchOfficeDao
+import photocentre.dataClasses.BranchOffice
 import photocentre.dataClasses.BranchOfficeModel
 import tornadofx.*
 
@@ -27,7 +28,12 @@ class BranchOfficeCreateFragment(photocentreDataSource: PhotocentreDataSource) :
         buttonbar {
             button("Save") {
                 action {
-                    branchOfficeController.createBranchOffice(currentAddressText.text, currentAmountText.text.toInt())
+                    //todo а почему просто вот так не сделать? Удобнее же
+                    branchOfficeController.createBranchOffice(
+                            BranchOffice(
+                                    address = currentAddressText.text,
+                                    amountOfWorkers = currentAmountText.text.toInt()
+                            ))
                     branchOfficeModel.branchOffices.set(branchOfficeController.getBranchOffices().asObservable())
                     currentAddressText.text = ""
                     currentAmountText.text = ""

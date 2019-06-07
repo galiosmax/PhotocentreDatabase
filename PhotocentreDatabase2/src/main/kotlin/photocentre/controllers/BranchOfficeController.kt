@@ -1,25 +1,19 @@
 package photocentre.controllers
 
 import javafx.collections.FXCollections
-import tornadofx.*
 import photocentre.dataClasses.BranchOffice
 import photocentre.dataClasses.Kiosk
 import photocentre.executors.BranchOfficeExecutor
 
 class BranchOfficeController(private val executor: BranchOfficeExecutor) {
-//todo переделать другие контроллеры в таком стиле
-//    fun createBranchOffice(branchOffice: BranchOffice): BranchOffice {
-//        val id = executor.createBranchOffice(branchOffice)
-//        return BranchOffice(
-//                id = id,
-//                address = branchOffice.address,
-//                amountOfWorkers = branchOffice.amountOfWorkers
-//        )
-//    }
-    fun createBranchOffice(address: String, amnt: Int): Long {
-        val branchOffice = BranchOffice(-1, address, amnt)
+    //todo переделать другие контроллеры в таком стиле
+    fun createBranchOffice(branchOffice: BranchOffice): Long {
         return executor.createBranchOffice(branchOffice)
     }
+//    fun createBranchOffice(address: String, amount: Int): Long {
+//        val branchOffice = BranchOffice(-1, address, amount)
+//        return executor.createBranchOffice(branchOffice)
+//    }
 
     fun createBranchOffices(branchOffices: List<BranchOffice>): List<BranchOffice> {
         val ids = executor.createBranchOffices(branchOffices)
@@ -39,16 +33,10 @@ class BranchOfficeController(private val executor: BranchOfficeExecutor) {
         return executor.findBranchOffice(id)
     }
 
-//    fun updateBranchOffice(branchOffice: BranchOffice): String {
-//        return executor.updateBranchOffice(branchOffice).toString()
-//    }
     fun updateBranchOffice(newOffice: BranchOffice) {
         executor.updateBranchOffice(newOffice)
     }
 
-//    fun deleteBranchOffice(id: Long): String {
-//        return executor.deleteBranchOffice(id).toString()
-//    }
     fun deleteBranchOffice(id: Long) {
         executor.deleteBranchOffice(id)
     }
@@ -57,9 +45,6 @@ class BranchOfficeController(private val executor: BranchOfficeExecutor) {
         return executor.countBranchOffices() ?: 0
     }
 
-//    fun getAllBranchOffices(): List<BranchOffice> {
-//        return executor.getAllBranchOffices()
-//    }
     fun getBranchOffices(): MutableList<BranchOffice> {
         return FXCollections.observableArrayList(executor.getAllBranchOffices())
     }
@@ -67,19 +52,6 @@ class BranchOfficeController(private val executor: BranchOfficeExecutor) {
     fun getBranchOfficesAndKiosks(): List<Pair<BranchOffice, Kiosk>> {
         return executor.getBranchOfficesAndKiosks()
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
