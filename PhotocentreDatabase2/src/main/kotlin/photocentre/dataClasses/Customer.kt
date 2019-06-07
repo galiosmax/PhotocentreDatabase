@@ -3,8 +3,7 @@ package photocentre.dataClasses
 import javafx.beans.property.SimpleObjectProperty
 import javafx.collections.ObservableList
 import tornadofx.ItemViewModel
-import tornadofx.getProperty
-import tornadofx.property
+import tornadofx.*
 
 class Customer
 (
