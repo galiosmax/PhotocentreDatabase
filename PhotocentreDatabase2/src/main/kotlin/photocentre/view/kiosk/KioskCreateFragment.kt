@@ -1,5 +1,6 @@
 package photocentre.view.kiosk
 
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.scene.control.ComboBox
 import javafx.scene.control.TextField
 import photocentre.controllers.BranchOfficeController
@@ -24,16 +25,34 @@ class KioskCreateFragment(photocentreDataSource: PhotocentreDataSource) : Fragme
     var currentAddressText: TextField by singleAssign()
     var currentAmountText: TextField by singleAssign()
     var currentOfficeAddress: ComboBox<String> by singleAssign()
+    val addressContext = ValidationContext()
+    val amountContext = ValidationContext()
     override val root = form {
         fieldset("Create Branch Kiosk") {
-            //todo можно валидацию сюда добавить
-            //todo валидация должна быть в контроллерах по идее
+
             field("Address") {
                 currentAddressText = textfield()
             }
+            val addressValidator = addressContext.addValidator(currentAddressText, currentAddressText.textProperty()) {
+                if (it.isNullOrBlank()) error("Required") else null
+            }
+
+            addressValidator.validate()
+
+            val addressResult = addressValidator.result
             field("Amount of workers") {
                 currentAmountText = textfield()
             }
+            currentAmountText.text = "0"
+            val amountValidator = amountContext.addValidator(currentAmountText, currentAmountText.textProperty()) {
+                if (it.isNullOrBlank()) error("Required") else
+                if (it!!.matches(Regex("^\\d+\$"))) null else error("Only numbers")
+            }
+            amountValidator.validate()
+            val amountResult = addressValidator.result
+//            currentAmountText.validator {
+//                if (it!!.length < 5) error("Too short") else null
+//            }
             field("Branch office address") {
                 currentOfficeAddress = combobox {
                     items = kioskController.getAllBranchOfficeAddresses().asObservable()
@@ -42,14 +61,13 @@ class KioskCreateFragment(photocentreDataSource: PhotocentreDataSource) : Fragme
         }
         buttonbar {
             button("Save") {
+                enableWhen(addressContext.valid and amountContext.valid)
                 action {
-                    //todo а почему просто вот так не сделать? Удобнее же
                     var index = 0
                     for (i in 1..branchOfficeModel.branchOffices.get().size) {
                         if (branchOfficeModel.branchOffices.get()[i].address == currentOfficeAddress.value)
                             index = i
                     }
-                    //ну типа валидация хыы, наверное лучше все таки там, когда ввод, но я нинаю как, потом объясни
                     val kiosk: Kiosk = try {
                         Kiosk(
                                 address = currentAddressText.text,

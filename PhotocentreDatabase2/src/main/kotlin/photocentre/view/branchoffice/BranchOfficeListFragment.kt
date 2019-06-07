@@ -2,16 +2,23 @@ package photocentre.view.branchoffice
 
 import tornadofx.*
 import photocentre.controllers.BranchOfficeController
+import photocentre.controllers.KioskController
 import photocentre.executors.BranchOfficeExecutor
 import photocentre.main.PhotocentreDataSource
 import photocentre.dao.BranchOfficeDao
+import photocentre.dao.KioskDao
 import photocentre.dataClasses.BranchOffice
 import photocentre.dataClasses.BranchOfficeModel
+import photocentre.dataClasses.KioskModel
+import photocentre.executors.KioskExecutor
 
 class BranchOfficeListFragment(photocentreDataSource: PhotocentreDataSource) : Fragment() {
     val branchOfficeDao = BranchOfficeDao(photocentreDataSource)
     val branchOfficeCtrl = BranchOfficeController(BranchOfficeExecutor(photocentreDataSource, branchOfficeDao))
     val branchOfficeModel: BranchOfficeModel by inject()
+    val kioskDao = KioskDao(photocentreDataSource)
+    val kioskController = KioskController(KioskExecutor(photocentreDataSource, kioskDao))
+    val kioskModel: KioskModel by inject()
 
     init {
         branchOfficeModel.branchOffices.set(branchOfficeCtrl.getBranchOffices().asObservable())
@@ -28,6 +35,7 @@ class BranchOfficeListFragment(photocentreDataSource: PhotocentreDataSource) : F
                     //branchOfficeModel.branchOffices
                     branchOfficeCtrl.deleteBranchOffice(selectedItem?.id!!)
                     branchOfficeModel.branchOffices.set(branchOfficeCtrl.getBranchOffices().asObservable())
+                    kioskModel.kiosks.set(kioskController.getAllKiosks().asObservable())
                 }
             }
             columnResizePolicy = SmartResize.POLICY

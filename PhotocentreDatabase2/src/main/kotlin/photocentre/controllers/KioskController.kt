@@ -40,8 +40,8 @@ class KioskController(private val executor: KioskExecutor) {
         return executor.deleteKiosk(id).toString()
     }
 
-    fun countKiosks(): Int? {
-        return executor.countKiosks()
+    fun countKiosks(): Int {
+        return executor.countKiosks() ?: 0
     }
 
     fun getAllKiosks(): List<Kiosk> {
