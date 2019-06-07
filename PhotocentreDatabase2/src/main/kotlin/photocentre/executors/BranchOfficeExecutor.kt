@@ -56,4 +56,65 @@ class BranchOfficeExecutor(
             branchOfficeDao.selectBranchOfficesAndKiosks()
         }
     }
+
+    fun filterBranchOffices(
+            id: String? = null,
+            address: String? = null,
+            amount: String? = null
+    ): List<BranchOffice> {
+
+        if (id != null && address != null && amount != null) {
+            return transaction(dataSource) {
+                branchOfficeDao.filterOffices(
+                        id = id,
+                        address = address,
+                        amount = amount
+                )
+            }
+        } else if (id == null && address != null && amount != null) {
+            return transaction(dataSource) {
+                branchOfficeDao.filterOffices(
+                        address = address,
+                        amount = amount
+                )
+            }
+        } else if (id != null && address == null && amount != null) {
+            return transaction(dataSource) {
+                branchOfficeDao.filterOffices(
+                        id = id,
+                        amount = amount
+                )
+            }
+        } else if (id != null && address != null && amount == null) {
+            return transaction(dataSource) {
+                branchOfficeDao.filterOffices(
+                        id = id,
+                        address = address
+                )
+            }
+        } else if (id == null && address == null && amount != null) {
+            return transaction(dataSource) {
+                branchOfficeDao.filterOffices(
+                        amount = amount
+                )
+            }
+        } else if (id == null && address != null && amount == null) {
+            return transaction(dataSource) {
+                branchOfficeDao.filterOffices(
+                        address = address
+                )
+            }
+        } else if (id != null && address == null && amount == null) {
+            return transaction(dataSource) {
+                branchOfficeDao.filterOffices(
+                        id = id
+                )
+            }
+        } else {
+            return transaction(dataSource) {
+                branchOfficeDao.filterOffices()
+            }
+        }
+
+    }
 }

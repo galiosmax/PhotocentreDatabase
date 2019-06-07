@@ -58,5 +58,8 @@ class BranchOfficeController(private val executor: BranchOfficeExecutor) {
         return executor.getBranchOfficesAndKiosks()
     }
 
+    fun filterBranchOffice(id: String?, address: String?, amount: String?): List<BranchOffice> {
+        return executor.filterBranchOffices(id, address, amount)
+    }
 
 }
