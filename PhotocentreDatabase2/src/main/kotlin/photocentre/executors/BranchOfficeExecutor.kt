@@ -58,63 +58,14 @@ class BranchOfficeExecutor(
     }
 
     fun filterBranchOffices(
-            id: String? = null,
-            address: String? = null,
-            amount: String? = null
+            id: Int,
+            address: String,
+            amount: Int
     ): List<BranchOffice> {
 
-        if (id != null && address != null && amount != null) {
             return transaction(dataSource) {
-                branchOfficeDao.filterOffices(
-                        id = id,
-                        address = address,
-                        amount = amount
-                )
+                branchOfficeDao.filterOffices(id, address, amount)
             }
-        } else if (id == null && address != null && amount != null) {
-            return transaction(dataSource) {
-                branchOfficeDao.filterOffices(
-                        address = address,
-                        amount = amount
-                )
-            }
-        } else if (id != null && address == null && amount != null) {
-            return transaction(dataSource) {
-                branchOfficeDao.filterOffices(
-                        id = id,
-                        amount = amount
-                )
-            }
-        } else if (id != null && address != null && amount == null) {
-            return transaction(dataSource) {
-                branchOfficeDao.filterOffices(
-                        id = id,
-                        address = address
-                )
-            }
-        } else if (id == null && address == null && amount != null) {
-            return transaction(dataSource) {
-                branchOfficeDao.filterOffices(
-                        amount = amount
-                )
-            }
-        } else if (id == null && address != null && amount == null) {
-            return transaction(dataSource) {
-                branchOfficeDao.filterOffices(
-                        address = address
-                )
-            }
-        } else if (id != null && address == null && amount == null) {
-            return transaction(dataSource) {
-                branchOfficeDao.filterOffices(
-                        id = id
-                )
-            }
-        } else {
-            return transaction(dataSource) {
-                branchOfficeDao.filterOffices()
-            }
-        }
 
     }
 }

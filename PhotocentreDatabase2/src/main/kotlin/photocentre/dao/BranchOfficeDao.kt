@@ -166,17 +166,29 @@ class BranchOfficeDao(private val dataSource: DataSource) {
     }
 
     fun filterOffices(
-            id: String = "any(select branch_office_id from branch_offices)",
+            id: Int = -1,
             address: String = "any(select branch_office_address from branch_offices)",
-            amount: String = "any(select branch_office_amount_of_workers from branch_offices)"
+            amount: Int = -1
     ): List<BranchOffice> {
         val statement = dataSource.connection.prepareStatement(
                 "select * from branch_offices where branch_office_id = ? and branch_office_address = ? and branch_office_amount_of_workers = ?"
         )
 
-        statement.setString(1, id)
-        statement.setString(2, address)
-        statement.setString(3, amount)
+        if (id == -1) {
+            statement.setString(1, "any(select branch_office_id from branch_offices)")
+        } else {
+            statement.setInt(1, id)
+        }
+        if (address == "") {
+            statement.setString(2, "any(select branch_office_address from branch_offices)")
+        } else {
+            statement.setString(2, address)
+        }
+        if (amount == -1) {
+            statement.setString(3, "any(select branch_office_amount_of_workers from branch_offices)")
+        } else {
+            statement.setInt(3, amount)
+        }
 
         val resultSet = statement.executeQuery()
         val res = ArrayList<BranchOffice>()
