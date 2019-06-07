@@ -58,7 +58,7 @@ class BranchOfficeExecutor(
     }
 
     fun filterBranchOffices(
-            id: Int,
+            id: Long,
             address: String,
             amount: Int
     ): List<BranchOffice> {

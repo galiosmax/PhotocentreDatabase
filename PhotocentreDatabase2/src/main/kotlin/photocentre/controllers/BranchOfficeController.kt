@@ -61,9 +61,9 @@ class BranchOfficeController(private val executor: BranchOfficeExecutor) {
     fun filterBranchOffice(id: String, address: String, amount: String): List<BranchOffice> {
 
         val passId = try {
-            id.toInt()
+            id.toLong()
         } catch (e: Exception) {
-            -1
+            -1L
         }
 
         val passAmount = try {
@@ -71,7 +71,7 @@ class BranchOfficeController(private val executor: BranchOfficeExecutor) {
         } catch (e: Exception) {
             -1
         }
-        
+
         return executor.filterBranchOffices(passId, address, passAmount)
     }
 
