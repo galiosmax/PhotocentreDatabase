@@ -2,7 +2,6 @@ package photocentre.dao
 
 import photocentre.dataClasses.BranchOffice
 import photocentre.dataClasses.Customer
-import photocentre.dataClasses.Professional
 import java.sql.Statement
 import java.sql.Types.BIGINT
 import javax.sql.DataSource
@@ -11,19 +10,15 @@ class CustomerDao(private val dataSource: DataSource) {
 
     fun createCustomer(customer: Customer): Long {
         val statement = dataSource.connection.prepareStatement(
-                "insert into customers (customer_name, customer_discount, professional_id, amateur_id) values (?, ?, ?, ?)",
+                "insert into customers (customer_name, customer_discount, customer_experience, branch_office_id) values (?, ?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS
         )
 
         statement.setString(1, customer.name)
         statement.setInt(2, customer.discount)
-        if (customer.professional != null) {
-            statement.setLong(3, customer.professional.id!!)
-        } else {
-            statement.setNull(3, BIGINT)
-        }
-        if (customer.amateur != null) {
-            statement.setLong(4, customer.amateur.id!!)
+        statement.setInt(3, customer.experience)
+        if (customer.branchOffice != null) {
+            statement.setLong(4, customer.branchOffice!!.id)
         } else {
             statement.setNull(4, BIGINT)
         }
@@ -36,20 +31,16 @@ class CustomerDao(private val dataSource: DataSource) {
 
     fun createCustomers(toCreate: Iterable<Customer>): List<Long> {
         val statement = dataSource.connection.prepareStatement(
-                "insert into customers (customer_name, customer_discount, professional_id, amateur_id) values (?, ?, ?, ?)",
+                "insert into customers (customer_name, customer_discount, customer_experience, branch_office_id) values (?, ?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS
         )
 
         for (customer in toCreate) {
             statement.setString(1, customer.name)
             statement.setInt(2, customer.discount)
-            if (customer.professional != null) {
-                statement.setLong(3, customer.professional.id!!)
-            } else {
-                statement.setNull(3, BIGINT)
-            }
-            if (customer.amateur != null) {
-                statement.setLong(4, customer.amateur.id!!)
+            statement.setInt(3, customer.experience)
+            if (customer.branchOffice != null) {
+                statement.setLong(4, customer.branchOffice!!.id)
             } else {
                 statement.setNull(4, BIGINT)
             }
@@ -67,7 +58,7 @@ class CustomerDao(private val dataSource: DataSource) {
 
     fun findCustomer(id: Long?): Customer? {
         val statement = dataSource.connection.prepareStatement(
-                "select customer_id, customer_name, customer_discount, professional_id, amateur_id from customers where customer_id = ?"
+                "select customer_id, customer_name, customer_discount, customer_experience, branch_office_id from customers where customer_id = ?"
         )
         if (id != null) {
             statement.setLong(1, id)
@@ -75,16 +66,15 @@ class CustomerDao(private val dataSource: DataSource) {
             return null
         }
         val resultSet = statement.executeQuery()
-        val professionalDao = ProfessionalDao(dataSource)
-        val amateurDao = AmateurDao(dataSource)
+        val branchOfficeDao = BranchOfficeDao(dataSource)
 
         return if (resultSet.next()) {
             Customer(
                     id = resultSet.getLong("customer_id"),
                     name = resultSet.getString("customer_name"),
                     discount = resultSet.getInt("customer_discount"),
-                    professional = professionalDao.findProfessional(resultSet.getLong("professional_id")),
-                    amateur = amateurDao.findAmateur(resultSet.getLong("amateur_id"))
+                    experience = resultSet.getInt("customer_experience"),
+                    branchOffice = branchOfficeDao.findBranchOffice(resultSet.getLong("branch_office_id"))
             )
         } else {
             null
@@ -93,21 +83,17 @@ class CustomerDao(private val dataSource: DataSource) {
 
     fun updateCustomer(customer: Customer) {
         val statement = dataSource.connection.prepareStatement(
-                "update customers set customer_name = ?, customer_discount = ?, professional_id = ?, amateur_id = ? where customer_id = ?"
+                "update customers set customer_name = ?, customer_discount = ?, customer_experience = ?, branch_office_id = ? where customer_id = ?"
         )
         statement.setString(1, customer.name)
         statement.setInt(2, customer.discount)
-        if (customer.professional != null) {
-            statement.setLong(3, customer.professional.id!!)
-        } else {
-            statement.setNull(3, BIGINT)
-        }
-        if (customer.amateur != null) {
-            statement.setLong(4, customer.amateur.id!!)
+        statement.setInt(3, customer.experience)
+        if (customer.branchOffice != null) {
+            statement.setLong(4, customer.branchOffice!!.id)
         } else {
             statement.setNull(4, BIGINT)
         }
-        statement.setLong(5, customer.id!!)
+        statement.setLong(5, customer.id)
 
         statement.executeUpdate()
     }
@@ -122,18 +108,14 @@ class CustomerDao(private val dataSource: DataSource) {
 
     fun getByOffice(branchOffice: BranchOffice): List<Customer> {
         val statement = dataSource.connection.prepareStatement(
-                "select customer_name, " +
-                        "branch_offices.branch_office_id as office_id, " +
+                "select customer_id, customer_name, customer_discount, " +
                         "branch_offices.branch_office_address as address " +
-                        "professional_id " +
                         "from customers " +
-                        "join professionals " +
-                        "on customers.professional_id = professionals.professional_id " +
                         "join branch_offices " +
-                        "on professionals.branch_office_id = ? " +
-                        "where professional_id is not null"
+                        "on branch_office.branch_office_id = customers.branch_office_id " +
+                        "where customers.branch_office_id = ?"
         )
-        statement.setLong(1, branchOffice.id!!)
+        statement.setLong(1, branchOffice.id)
         val resultSet = statement.executeQuery()
         val res = ArrayList<Customer>()
 
@@ -141,33 +123,26 @@ class CustomerDao(private val dataSource: DataSource) {
             res += Customer(
                     id = resultSet.getLong("customer_id"),
                     name = resultSet.getString("customer_name"),
-                    professional = Professional(
-                            id = resultSet.getLong("professional_id"),
-                            branchOffice = BranchOffice(
-                                    id = resultSet.getLong("office_id"),
-                                    address = resultSet.getString("address")
-                            )
+                    discount = resultSet.getInt("customer_discount"),
+                    branchOffice = BranchOffice(
+                            id = resultSet.getLong("office_id"),
+                            address = resultSet.getString("address")
                     )
             )
         }
         return res
     }
 
-    //TODO
     fun getIfDiscount(): List<Customer> {
         val statement = dataSource.connection.prepareStatement(
-                "select customer_name, " +
-                        "(case when professional_id is not null then professionals.professional_discount else customer_discount end) as customer_discount " +
-                        "from customers " +
-                        "join professionals " +
-                        "where customer_discount > 0 or professional_id is not null " +
-                        "order by customer_discount desc"
+                "select customer_id, customer_name, customer_discount from customers where customer_discount > 0 order by customer_discount desc"
         )
         val resultSet = statement.executeQuery()
         val res = ArrayList<Customer>()
 
         while (resultSet.next()) {
             res += Customer(
+                    id = resultSet.getLong("customer_id"),
                     name = resultSet.getString("customer_name"),
                     discount = resultSet.getInt("customer_discount")
             )
@@ -211,16 +186,15 @@ class CustomerDao(private val dataSource: DataSource) {
         val resultSet = statement.executeQuery()
         val res = ArrayList<Customer>()
 
-        val professionalDao = ProfessionalDao(dataSource)
-        val amateurDao = AmateurDao(dataSource)
+        val branchOfficeDao = BranchOfficeDao(dataSource)
 
         while (resultSet.next()) {
             res += Customer(
                     id = resultSet.getLong("customer_id"),
                     name = resultSet.getString("customer_name"),
                     discount = resultSet.getInt("customer_discount"),
-                    professional = professionalDao.findProfessional(resultSet.getLong("professional_id")),
-                    amateur = amateurDao.findAmateur(resultSet.getLong("amateur_id"))
+                    experience = resultSet.getInt("customer_experience"),
+                    branchOffice = branchOfficeDao.findBranchOffice(resultSet.getLong("branch_office_id"))
             )
         }
         return res

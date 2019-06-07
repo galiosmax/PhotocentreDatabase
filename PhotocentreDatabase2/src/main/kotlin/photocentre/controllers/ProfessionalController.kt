@@ -1,7 +1,6 @@
 package photocentre.controllers
 
 import photocentre.dataClasses.Professional
-import photocentre.executors.ProfessionalExecutor
 
 class ProfessionalController(private val executor: ProfessionalExecutor) {
 

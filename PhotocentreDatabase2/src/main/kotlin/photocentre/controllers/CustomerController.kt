@@ -13,8 +13,8 @@ class CustomerController(private val executor: CustomerExecutor) {
                 id = id,
                 name = customer.name,
                 discount = customer.discount,
-                professional = customer.professional,
-                amateur = customer.amateur
+                experience = customer.experience,
+                branchOffice = customer.branchOffice
         )
     }
 
@@ -27,8 +27,8 @@ class CustomerController(private val executor: CustomerExecutor) {
                     id = ids[i],
                     name = customers[i].name,
                     discount = customers[i].discount,
-                    professional = customers[i].professional,
-                    amateur = customers[i].amateur
+                    experience = customers[i].experience,
+                    branchOffice = customers[i].branchOffice
             )
         }
         return newCustomers
