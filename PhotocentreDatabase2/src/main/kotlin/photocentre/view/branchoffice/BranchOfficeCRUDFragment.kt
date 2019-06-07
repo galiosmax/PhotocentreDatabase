@@ -8,6 +8,7 @@ import photocentre.dataClasses.BranchOfficeModel
 import tornadofx.*
 
 class BranchOfficeCRUDFragment(photocentreDataSource: PhotocentreDataSource) : Fragment() {
+    val fragment = this
     val branchOfficeModel: BranchOfficeModel by inject()
     val branchOfficeDao = BranchOfficeDao(photocentreDataSource)
     val branchOfficeController = BranchOfficeController(BranchOfficeExecutor(photocentreDataSource, branchOfficeDao))
@@ -16,7 +17,7 @@ class BranchOfficeCRUDFragment(photocentreDataSource: PhotocentreDataSource) : F
             paddingAll = 10
             button("Create") {
                 action {
-                    val branchOfficeCreateFragment = BranchOfficeCreateFragment(photocentreDataSource)
+                    val branchOfficeCreateFragment = BranchOfficeCreateFragment(photocentreDataSource, fragment)
                     replaceWith(branchOfficeCreateFragment, ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.LEFT))
                 }
             }

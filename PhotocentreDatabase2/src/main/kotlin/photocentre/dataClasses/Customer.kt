@@ -25,8 +25,11 @@ class Customer
     var experience: Int by property(experience)
     fun experienceProperty() = getProperty(Customer::experience)
 
-    var branchOffice: BranchOffice? by property(branchOffice)
+    var branchOffice: BranchOffice by property(branchOffice)
     fun branchOfficeProperty() = getProperty(Customer::branchOffice)
+
+    var branchOfficeAddress: String by property(branchOffice?.address)
+    fun branchOfficeAddressProperty() = getProperty(Customer::branchOfficeAddress)
 }
 
 class CustomerModel : ItemViewModel<Customer>() {
@@ -36,4 +39,5 @@ class CustomerModel : ItemViewModel<Customer>() {
     val discount = bind(Customer::discountProperty)
     val experience = bind(Customer::experienceProperty)
     val branchOffice = bind(Customer::branchOfficeProperty)
+    val branchOfficeAddress = bind(Customer::branchOfficeAddressProperty)
 }

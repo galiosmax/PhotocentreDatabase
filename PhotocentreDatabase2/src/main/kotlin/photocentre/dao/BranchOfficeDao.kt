@@ -144,4 +144,24 @@ class BranchOfficeDao(private val dataSource: DataSource) {
         }
         return res
     }
+
+    fun selectPage(size: Int, page: Int): List<BranchOffice> {
+        val statement = dataSource.connection.prepareStatement(
+                "select * from branch_offices order by branch_office_id limit ? offset ?"
+        )
+        statement.setInt(1, size)
+        statement.setInt(2, page)
+
+        val resultSet = statement.executeQuery()
+        val res = ArrayList<BranchOffice>()
+
+        while (resultSet.next()) {
+            res += BranchOffice(
+                    id = resultSet.getLong("branch_office_id"),
+                    address = resultSet.getString("branch_office_address"),
+                    amountOfWorkers = resultSet.getInt("branch_office_amount_of_workers")
+            )
+        }
+        return res
+    }
 }

@@ -5,6 +5,9 @@ import photocentre.main.Db
 import photocentre.main.PhotocentreDataSource
 import photocentre.view.branchoffice.BranchOfficeCRUDFragment
 import photocentre.view.branchoffice.BranchOfficeListFragment
+import photocentre.view.customer.CustomerCRUDFragment
+import photocentre.view.customer.CustomerCreateFragment
+import photocentre.view.customer.CustomerListFragment
 import photocentre.view.kiosk.KioskCRUDFragment
 import photocentre.view.kiosk.KioskListFragment
 import tornadofx.*
@@ -28,18 +31,15 @@ class MainView : View("Photocentre Database") {
             }
         }
 
+        tab("Customers") {
+            splitpane {
+                add(CustomerListFragment(photocentreDataSource))
+                add(CustomerCRUDFragment(photocentreDataSource))
+            }
+        }
         //todo табы для таблиц
-//        tab("Kiosks") {
-//            vbox {
-//
-//            }
-//        }
+
 //        tab("Workers") {
-//            vbox {
-//
-//            }
-//        }
-//        tab("Customers") {
 //            vbox {
 //
 //            }
