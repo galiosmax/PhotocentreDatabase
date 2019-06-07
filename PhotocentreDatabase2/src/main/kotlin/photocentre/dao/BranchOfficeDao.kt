@@ -13,7 +13,7 @@ class BranchOfficeDao(private val dataSource: DataSource) {
                 Statement.RETURN_GENERATED_KEYS
         )
         statement.setString(1, branchOffice.address)
-        statement.setInt(2, branchOffice.amountOfWorkers)
+        statement.setInt(2, branchOffice.amountOfWorkers!!)
         statement.executeUpdate()
         val generated = statement.generatedKeys
         generated.next()
@@ -28,7 +28,7 @@ class BranchOfficeDao(private val dataSource: DataSource) {
 
         for (branchOffice in toCreate) {
             statement.setString(1, branchOffice.address)
-            statement.setInt(2, branchOffice.amountOfWorkers)
+            statement.setInt(2, branchOffice.amountOfWorkers!!)
             statement.addBatch()
         }
 
@@ -64,8 +64,8 @@ class BranchOfficeDao(private val dataSource: DataSource) {
                 "update branch_offices set branch_office_address = ?, branch_office_amount_of_workers = ? where branch_office_id = ?"
         )
         statement.setString(1, branchOffice.address)
-        statement.setInt(2, branchOffice.amountOfWorkers)
-        statement.setLong(3, branchOffice.id)
+        statement.setInt(2, branchOffice.amountOfWorkers!!)
+        statement.setLong(3, branchOffice.id!!)
         statement.executeUpdate()
     }
 
@@ -109,14 +109,14 @@ class BranchOfficeDao(private val dataSource: DataSource) {
 
     fun selectBranchOfficesAndKiosks(): List<Pair<BranchOffice, Kiosk>> {
         val statement = dataSource.connection.prepareStatement(
-                "select branch_offices.branch_office_id as office_id," +
-                        "branch_offices.branch_office_address as office_address," +
-                        "kiosks.kiosk_id as kiosk_id," +
-                        "kiosks.kiosk_address as kiosk_address" +
-                        "from branch_offices" +
-                        "left join kiosks" +
-                        "on branch_offices.branch_office_id = kiosks.branch_office_id" +
-                        "order by office_id, kiosk_id;"
+                "select branch_offices.branch_office_id as office_id, " +
+                        "branch_offices.branch_office_address as office_address, " +
+                        "kiosks.kiosk_id as kiosk_id, " +
+                        "kiosks.kiosk_address as kiosk_address " +
+                        "from branch_offices " +
+                        "left join kiosks " +
+                        "on branch_offices.branch_office_id = kiosks.branch_office_id " +
+                        "order by branch_offices.branch_office_id, kiosks.kiosk_id"
         )
         val resultSet = statement.executeQuery()
         val res = ArrayList<Pair<BranchOffice, Kiosk>>()
@@ -128,11 +128,16 @@ class BranchOfficeDao(private val dataSource: DataSource) {
                     address = resultSet.getString("office_address")
             )
 
+            var address = resultSet.getString("kiosk_address")
+            if (address == null) {
+                address = "null"
+            }
+
             res += Pair(
                     office,
                     Kiosk(
                             id = resultSet.getLong("kiosk_id"),
-                            address = resultSet.getString("kiosk_address"),
+                            address = address,
                             branchOffice = office
                     )
             )

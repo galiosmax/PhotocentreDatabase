@@ -7,8 +7,7 @@ import photocentre.executors.BranchOfficeExecutor
 import kotlin.math.max
 
 class BranchOfficeController(private val executor: BranchOfficeExecutor) {
-    //todo переделать другие контроллеры в таком стиле
-    //todo тут лучше валидацию делать наверн
+
     fun createBranchOffice(branchOffice: BranchOffice): BranchOffice {
 
         branchOffice.amountOfWorkers = max(0, branchOffice.amountOfWorkers)
@@ -20,10 +19,6 @@ class BranchOfficeController(private val executor: BranchOfficeExecutor) {
                 amountOfWorkers = branchOffice.amountOfWorkers
         )
     }
-//    fun createBranchOffice(address: String, amount: Int): Long {
-//        val branchOffice = BranchOffice(-1, address, amount)
-//        return executor.createBranchOffice(branchOffice)
-//    }
 
     fun createBranchOffices(branchOffices: List<BranchOffice>): List<BranchOffice> {
         val ids = executor.createBranchOffices(branchOffices)
