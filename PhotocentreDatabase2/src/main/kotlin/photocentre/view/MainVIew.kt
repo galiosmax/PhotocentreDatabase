@@ -5,6 +5,8 @@ import photocentre.main.Db
 import photocentre.main.PhotocentreDataSource
 import photocentre.view.branchoffice.BranchOfficeCRUDFragment
 import photocentre.view.branchoffice.BranchOfficeListFragment
+import photocentre.view.kiosk.KioskCRUDFragment
+import photocentre.view.kiosk.KioskListFragment
 import tornadofx.*
 
 class MainView : View("Photocentre Database") {

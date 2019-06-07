@@ -118,4 +118,17 @@ class KioskDao(private val dataSource: DataSource) {
         }
         return res
     }
+
+    fun getAllAddresses(): List<String> {
+        val statement = dataSource.connection.prepareStatement(
+                "select distinct branch_office_address from kiosks join branch_offices on kiosks.branch_office_id = branch_offices.branch_office_id"
+        )
+        val resultSet = statement.executeQuery()
+        val res = ArrayList<String>()
+        while(resultSet.next()) {
+            res += resultSet.getString("branch_office_address")
+        }
+        return res
+    }
+
 }

@@ -1,4 +1,4 @@
-package photocentre.view
+package photocentre.view.kiosk
 
 import tornadofx.*
 import photocentre.controllers.KioskController
@@ -17,19 +17,19 @@ class KioskCRUDFragment(photocentreDataSource: PhotocentreDataSource) : Fragment
             button("Create") {
                 action {
                     val kioskCreateFragment = KioskCreateFragment(photocentreDataSource)
-                    replaceWith(kioskCreateFragment)
+                    replaceWith(kioskCreateFragment, ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.LEFT))
                 }
             }
             button("Update") {
                 action {
                     val kioskDetailsFragment = KioskDetailsFragment(photocentreDataSource)
-                    replaceWith(kioskDetailsFragment)
+                    replaceWith(kioskDetailsFragment, ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.LEFT))
                 }
             }
             button("countKiosks") {
                 action {
                     val countKiosksFragment = KioskSelectCountFragment(photocentreDataSource)
-                    replaceWith(countKiosksFragment)
+                    replaceWith(countKiosksFragment, ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.LEFT))
                 }
             }
         }

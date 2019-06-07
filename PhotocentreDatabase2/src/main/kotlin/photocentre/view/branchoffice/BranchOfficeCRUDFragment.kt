@@ -17,26 +17,26 @@ class BranchOfficeCRUDFragment(photocentreDataSource: PhotocentreDataSource) : F
             button("Create") {
                 action {
                     val branchOfficeCreateFragment = BranchOfficeCreateFragment(photocentreDataSource)
-                    replaceWith(branchOfficeCreateFragment)
+                    replaceWith(branchOfficeCreateFragment, ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.LEFT))
                 }
             }
             button("Update") {
                 action {
                     val branchOfficeDetailsFragment = BranchOfficeDetailsFragment(photocentreDataSource)
-                    replaceWith(branchOfficeDetailsFragment)
+                    replaceWith(branchOfficeDetailsFragment, ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.LEFT))
                 }
             }
             button("selectBranchOfficesAndKiosks") {
                 action {
                     //todo какой-то запрос связанный с киоском
                     val selectBranchOfficeAndKiosksFragment = BranchOfficeSelectBranchOfficeAndKiosksFragment(photocentreDataSource)
-                    replaceWith(selectBranchOfficeAndKiosksFragment)
+                    replaceWith(selectBranchOfficeAndKiosksFragment, ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.LEFT))
                 }
             }
             button("countBranchOffices") {
                 action {
                     val countOfficeFragment = BranchOfficeSelectCountOfficeFragment(photocentreDataSource)
-                    replaceWith(countOfficeFragment)
+                    replaceWith(countOfficeFragment, ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.LEFT))
                 }
             }
         }

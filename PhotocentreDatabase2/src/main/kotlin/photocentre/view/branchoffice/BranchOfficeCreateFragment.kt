@@ -54,7 +54,7 @@ class BranchOfficeCreateFragment(photocentreDataSource: PhotocentreDataSource) :
         button("Back") {
             action {
                 val branchOfficeCRUDFragment = BranchOfficeCRUDFragment(photocentreDataSource)
-                replaceWith(branchOfficeCRUDFragment)
+                replaceWith(branchOfficeCRUDFragment, ViewTransition.Slide(0.3.seconds, ViewTransition.Direction.RIGHT))
             }
         }
     }

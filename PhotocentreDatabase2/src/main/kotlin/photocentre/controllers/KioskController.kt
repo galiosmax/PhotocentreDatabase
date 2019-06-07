@@ -48,4 +48,8 @@ class KioskController(private val executor: KioskExecutor) {
         return executor.getAllKiosks()
     }
 
+    fun getAllBranchOfficeAddresses(): List<String> {
+        return executor.getAllBranchOfficeAddresses()
+    }
+
 }

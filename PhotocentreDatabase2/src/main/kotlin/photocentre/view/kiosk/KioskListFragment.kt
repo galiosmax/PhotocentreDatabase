@@ -1,4 +1,4 @@
-package photocentre.view
+package photocentre.view.kiosk
 
 import photocentre.controllers.KioskController
 import photocentre.dao.KioskDao

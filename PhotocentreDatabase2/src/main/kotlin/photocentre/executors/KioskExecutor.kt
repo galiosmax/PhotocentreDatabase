@@ -51,4 +51,10 @@ class KioskExecutor(
         }
     }
 
+    fun getAllBranchOfficeAddresses() : List<String> {
+        return transaction(dataSource) {
+            kioskDao.getAllAddresses()
+        }
+    }
+
 }
